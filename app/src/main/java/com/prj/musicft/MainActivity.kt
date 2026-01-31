@@ -129,9 +129,26 @@ fun MusicFTApp() {
                 }
 
                 composable(Screen.Library.route) {
-                    Text(
-                        "Library Screen",
-                        color = androidx.compose.ui.graphics.Color.White
+                    com.prj.musicft.presentation.library.LibraryScreen(
+                        onNavigateToCollection = { type ->
+                            navController.navigate(Screen.CollectionList.createRoute(type.name))
+                        },
+                        onSongClick = { song ->
+                            navController.currentBackStackEntry?.savedStateHandle?.set("song", song)
+                            navController.currentBackStackEntry?.savedStateHandle?.set("forcePlay", true)
+                            navController.navigate(Screen.Player.route)
+                        }
+                    )
+                }
+
+                composable(Screen.CollectionList.route) {
+                    com.prj.musicft.presentation.library.CollectionSongListScreen(
+                        onNavigateUp = { navController.popBackStack() },
+                        onSongClick = { song ->
+                            navController.currentBackStackEntry?.savedStateHandle?.set("song", song)
+                            navController.currentBackStackEntry?.savedStateHandle?.set("forcePlay", true)
+                            navController.navigate(Screen.Player.route)
+                        }
                     )
                 }
 
