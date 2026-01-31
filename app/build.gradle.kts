@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -80,4 +81,7 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
+
+    //Timber
+    implementation ("com.jakewharton.timber:timber:4.7.1")
 }

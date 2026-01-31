@@ -74,6 +74,9 @@ interface SongDao {
     @Query("SELECT * FROM songs WHERE file_path = :filePath LIMIT 1")
     suspend fun getSongByFilePath(filePath: String): SongEntity?
 
+    @Query("SELECT * FROM songs WHERE media_id = :mediaId LIMIT 1")
+    suspend fun getSongByMediaId(mediaId: Long): SongEntity?
+
     @Transaction
     @Query("SELECT * FROM songs ORDER BY title ASC")
     fun getAllSongsWithDetails(): Flow<List<SongWithDetails>>

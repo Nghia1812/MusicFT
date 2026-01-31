@@ -7,17 +7,18 @@ fun SongWithDetails.toDomain(): Song {
     return Song(
             id = song.id,
             title = song.title,
-            artistId = artist.id,
-            artistName = artist.name,
-            albumId = album.id,
-            albumName = album.name,
+            artistId = 0,
+            artistName = "",
+            albumId = 0,
+            albumName = "",
             duration = song.duration,
             filePath = song.filePath,
             artworkUri = song.artworkUri,
             isFavorite = song.isFavorite,
             trackNumber = song.trackNumber,
             year = song.year,
-            genre = song.genre
+            genre = song.genre,
+            addedAt = song.addedAt
     )
 }
 
@@ -40,7 +41,8 @@ fun SongEntity.toDomain(
             isFavorite = isFavorite,
             trackNumber = trackNumber,
             year = year,
-            genre = genre
+            genre = genre,
+            addedAt = addedAt
     )
 }
 

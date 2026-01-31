@@ -28,8 +28,8 @@ data class AlbumEntity(
     @ColumnInfo(name = "name")
     val name: String,  // Album name (e.g., "Abbey Road")
     
-    @ColumnInfo(name = "artist_id")
-    val artistId: Long,  // FK to ArtistEntity
+    @ColumnInfo(name = "artist_id", defaultValue = "1")
+    val artistId: Long,  // FK to ArtistEntity (defaults to Unknown Artist)
     
     @ColumnInfo(name = "artwork_uri")
     val artworkUri: String? = null,  // Album cover art URI

@@ -8,22 +8,23 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "songs",
-    foreignKeys = [
-        ForeignKey(
-            entity = ArtistEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["artist_id"],
-            onDelete = ForeignKey.SET_DEFAULT
-        ),
-        ForeignKey(
-            entity = AlbumEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["album_id"],
-            onDelete = ForeignKey.SET_DEFAULT
-        )
-    ],
+//    foreignKeys = [
+//        ForeignKey(
+//            entity = ArtistEntity::class,
+//            parentColumns = ["id"],
+//            childColumns = ["artist_id"],
+//            onDelete = ForeignKey.SET_DEFAULT
+//        ),
+//        ForeignKey(
+//            entity = AlbumEntity::class,
+//            parentColumns = ["id"],
+//            childColumns = ["album_id"],
+//            onDelete = ForeignKey.SET_DEFAULT
+//        )
+//    ],
     indices = [
-        Index(value = ["file_path"], unique = true),  // Prevent duplicates
+        Index(value = ["media_id"], unique = true),   // MediaStore ID is the unique identifier
+        Index(value = ["file_path"]),                 // Index for legacy queries
         Index(value = ["artist_id"]),                 // Fast artist queries
         Index(value = ["album_id"]),                  // Fast album queries
         Index(value = ["is_favorite"]),               // Fast favorite filtering
@@ -34,20 +35,23 @@ data class SongEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     
+    @ColumnInfo(name = "media_id")
+    val mediaId: Long,  // MediaStore ID - stable identifier across scans
+    
     @ColumnInfo(name = "title")
     val title: String,
     
-    @ColumnInfo(name = "artist_id")
-    val artistId: Long,  // FK to ArtistEntity
+    @ColumnInfo(name = "artist_id", defaultValue = "1")
+    val artistId: Long,  // FK to ArtistEntity (defaults to Unknown Artist)
     
-    @ColumnInfo(name = "album_id")
-    val albumId: Long,  // FK to AlbumEntity
+    @ColumnInfo(name = "album_id", defaultValue = "1")
+    val albumId: Long,  // FK to AlbumEntity (defaults to Unknown Album)
     
     @ColumnInfo(name = "duration")
     val duration: Long,  // Duration in milliseconds
     
     @ColumnInfo(name = "file_path")
-    val filePath: String,  // Absolute path to audio file (unique)
+    val filePath: String,  // File path or Content URI for playback
     
     @ColumnInfo(name = "is_favorite", defaultValue = "0")
     val isFavorite: Boolean = false,

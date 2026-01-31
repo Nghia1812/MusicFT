@@ -19,7 +19,7 @@ import com.prj.musicft.domain.model.ThemeMode
                         PlaylistSongCrossRef::class,
                         HistoryEntryEntity::class,
                         AppSettingsEntity::class],
-        version = 1,
+        version = 3,
         exportSchema = true
 )
 @TypeConverters(Converters::class)

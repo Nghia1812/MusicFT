@@ -1,5 +1,7 @@
 package com.prj.musicft.data.repository
 
+import android.util.Log
+import androidx.media3.ui.TimeBar
 import com.prj.musicft.data.local.dao.*
 import com.prj.musicft.data.local.database.MusicDatabase.Companion.DEFAULT_ALBUM
 import com.prj.musicft.data.local.database.MusicDatabase.Companion.DEFAULT_ARTIST
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Singleton
 class FullSyncRepository
@@ -50,7 +53,7 @@ constructor(
 
                         // 1. Scan device
                         val scannedFiles = localMediaScanner.scanLocalAudio()
-
+                        Timber.i("Scanned $scannedFiles files")
                         // 2. Sync with DB
                         syncWithDatabase(scannedFiles)
                     } catch (e: Exception) {
@@ -67,22 +70,27 @@ constructor(
         // For simplicity and robustness, we'll process song-by-song but use the cache.
 
         for (meta in scannedFiles) {
+            Timber.i("Process Song: $meta")
             // A. Resolve Artist
-            val artistId = getOrCreateArtistId(meta.artist)
+//            val artistId = getOrCreateArtistId(meta.artist)
+//            Timber.i("Process artistId: $artistId")
 
             // B. Resolve Album
-            val albumId = getOrCreateAlbumId(meta.album, artistId)
+//            val albumId = getOrCreateAlbumId(meta.album, artistId)
+            //Timber.i("Process albumId: $albumId")
 
-            // C. Insert/Update Song
-            val existingSong = songDao.getSongByFilePath(meta.filePath)
+            // C. Insert/Update Song - Use MediaStore ID as the unique identifier
+            val existingSong = songDao.getSongByMediaId(meta.id)
+            Timber.i("Process existingSong: $existingSong")
 
             if (existingSong == null) {
                 // Insert new
-                songDao.insert(
+                val id = songDao.insert(
                         SongEntity(
+                                mediaId = meta.id,
                                 title = meta.title,
-                                artistId = artistId,
-                                albumId = albumId,
+                                artistId = 0,
+                                albumId = 0,
                                 duration = meta.duration,
                                 filePath = meta.filePath,
                                 artworkUri = meta.artworkUri,
@@ -93,6 +101,8 @@ constructor(
                                 addedAt = System.currentTimeMillis()
                         )
                 )
+                Timber.i("Process id: $id")
+
             } else {
                 // Update specific fields if changed (keeping user data like isFavorite)
                 // Note: We only update metadata that might have changed on disk.
@@ -101,17 +111,19 @@ constructor(
 
                 val needsUpdate =
                         existingSong.title != meta.title ||
-                                existingSong.artistId != artistId ||
-                                existingSong.albumId != albumId ||
-                                existingSong.duration != meta.duration
+                                existingSong.artistId != 0L ||
+                                existingSong.albumId != 0L||
+                                existingSong.duration != meta.duration ||
+                                existingSong.filePath != meta.filePath
 
                 if (needsUpdate) {
                     songDao.update(
                             existingSong.copy(
                                     title = meta.title,
-                                    artistId = artistId,
-                                    albumId = albumId,
+                                    artistId = 0L,
+                                    albumId = 0,
                                     duration = meta.duration,
+                                    filePath = meta.filePath,
                                     // Update other metadata if needed
                                     trackNumber = meta.trackNumber,
                                     year = meta.year,

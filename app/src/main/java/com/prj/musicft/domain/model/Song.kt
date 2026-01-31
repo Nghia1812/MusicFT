@@ -1,5 +1,9 @@
 package com.prj.musicft.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Song(
         val id: Long,
         val title: String,
@@ -13,5 +17,6 @@ data class Song(
         val isFavorite: Boolean,
         val trackNumber: Int? = null,
         val year: Int? = null,
-        val genre: String? = null
-)
+        val genre: String? = null,
+        val addedAt: Long = 0
+) : Parcelable

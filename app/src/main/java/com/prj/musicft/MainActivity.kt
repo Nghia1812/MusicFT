@@ -3,45 +3,185 @@ package com.prj.musicft
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.prj.musicft.ui.theme.MusicFTTheme
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.prj.musicft.domain.model.Song
+import com.prj.musicft.presentation.common.AppBottomNavigation
+import com.prj.musicft.presentation.home.HomeScreen
+import com.prj.musicft.presentation.navigation.Screen
+import com.prj.musicft.presentation.player.FullPlayerScreen
+import com.prj.musicft.presentation.player.FullPlayerViewModel
+import com.prj.musicft.presentation.player.MiniPlayer
+import com.prj.musicft.presentation.splash.SplashScreen
+import com.prj.musicft.presentation.theme.MusicFTTheme
+import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MusicFTTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
+        setContent { MusicFTTheme { MusicFTApp() } }
+        Timber.plant(MyTimberTree())
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun MusicFTApp() {
+    val navController = rememberNavController()
+    // In a real app, observe "current song" flow to decide if MiniPlayer is visible
+    val showMiniPlayer = true
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MusicFTTheme {
-        Greeting("Android")
+    // Check current route to hide bottom bar on Splash
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val showBottomBar = currentRoute != Screen.Splash.route
+    
+    // Hide MiniPlayer when on Player screen
+    val showMiniPlayerBar = showBottomBar && currentRoute != Screen.Player.route
+
+    Scaffold(
+        bottomBar = {
+            if (showBottomBar) {
+                AppBottomNavigation(
+                    navController = navController
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Splash.route,
+                modifier = Modifier.padding(innerPadding),
+                enterTransition = {
+                    when (targetState.destination.route) {
+                        Screen.Player.route -> {
+                            slideInVertically(
+                                initialOffsetY = { it },
+                                animationSpec = tween(1000, easing = FastOutSlowInEasing)
+                            ) + fadeIn(animationSpec = tween(500))
+                        }
+                        else -> fadeIn(animationSpec = tween(400))
+                    }
+                },
+                exitTransition = {
+                    when (targetState.destination.route) {
+                        Screen.Player.route -> {
+                            fadeOut(animationSpec = tween(400))
+                        }
+                        else -> fadeOut(animationSpec = tween(400))
+                    }
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(400))
+                },
+                popExitTransition = {
+                    when (initialState.destination.route) {
+                        Screen.Player.route -> {
+                            slideOutVertically(
+                                targetOffsetY = { it },
+                                animationSpec = tween(1000, easing = FastOutSlowInEasing)
+                            ) + fadeOut(animationSpec = tween(500))
+                        }
+                        else -> fadeOut(animationSpec = tween(400))
+                    }
+                }
+            ) {
+                composable(Screen.Splash.route) {
+                    SplashScreen(
+                        onNavigateToHome = {
+                            navController.navigate(Screen.Home.route) {
+                                popUpTo(Screen.Splash.route) { inclusive = true }
+                            }
+                        }
+                    )
+                }
+
+                composable(Screen.Home.route) {
+                    HomeScreen(
+                        onSongClick = { song ->
+                            navController.currentBackStackEntry?.savedStateHandle?.set("song", song)
+                            navController.currentBackStackEntry?.savedStateHandle?.set("forcePlay", true)
+                            navController.navigate(Screen.Player.route)
+                        },
+                        onSearchClick = {
+                            navController.navigate(Screen.Search.route)
+                        }
+                    )
+                }
+
+                composable(Screen.Library.route) {
+                    Text(
+                        "Library Screen",
+                        color = androidx.compose.ui.graphics.Color.White
+                    )
+                }
+
+                composable(Screen.Settings.route) {
+                    androidx.compose.material3.Text(
+                        "Settings Screen",
+                        color = androidx.compose.ui.graphics.Color.White
+                    )
+                }
+
+                composable(Screen.Player.route) {
+                    val viewModel: FullPlayerViewModel = hiltViewModel()
+
+                    val previousEntry = navController.previousBackStackEntry
+                    val song = previousEntry?.savedStateHandle?.get<Song>("song")
+                    val forcePlay = previousEntry?.savedStateHandle?.get<Boolean>("forcePlay") ?: false
+
+                    // Only load song if explicitly passed (from song list)
+                    // If no song passed (from MiniPlayer), ViewModel will use current service state
+                    LaunchedEffect(song) {
+                        if (song != null) {
+                            viewModel.loadSong(song, forcePlay = forcePlay)
+                            // Clear after loading to prevent re-trigger
+                            previousEntry.savedStateHandle.remove<Song>("song")
+                            previousEntry.savedStateHandle.remove<Boolean>("forcePlay")
+                        }
+                    }
+
+                    FullPlayerScreen(
+                        onCollapse = { navController.popBackStack() },
+                        viewModel = viewModel
+                    )
+                }
+            }
+
+            // Floating MiniPlayer - positioned above the bottom nav bar
+            // Hidden when on Player screen
+            if (showMiniPlayerBar && showMiniPlayer) {
+                MiniPlayer(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = innerPadding.calculateBottomPadding()),
+                    onClick = {
+                        // Clear any previous song data to prevent restart
+                        navController.currentBackStackEntry?.savedStateHandle?.remove<Song>("song")
+                        navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>("forcePlay")
+                        navController.navigate(Screen.Player.route)
+                    }
+                )
+            }
+        }
     }
 }
