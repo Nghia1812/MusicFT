@@ -6,6 +6,8 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,18 +24,19 @@ import com.prj.musicft.presentation.theme.CyberpunkTeal
 import com.prj.musicft.presentation.theme.SurfaceSlate
 
 sealed class BottomNavItem(
-        val route: String,
-        val title: String,
-        val selectedIcon: ImageVector,
-        val unselectedIcon: ImageVector
+    val route: String,
+    val title: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector
 ) {
     object Home :
-            BottomNavItem(
-                    route = Screen.Home.route,
-                    title = "Home",
-                    selectedIcon = Icons.Filled.Home,
-                    unselectedIcon = Icons.Outlined.Home
-            )
+        BottomNavItem(
+            route = Screen.Home.route,
+            title = "Home",
+            selectedIcon = Icons.Filled.Home,
+            unselectedIcon = Icons.Outlined.Home
+        )
+
     object Library :
         BottomNavItem(
             route = Screen.Library.route,
@@ -53,12 +56,12 @@ sealed class BottomNavItem(
         )
 
     object Settings :
-            BottomNavItem(
-                    route = Screen.Settings.route,
-                    title = "Settings",
-                    selectedIcon = Icons.Filled.PlayArrow,
-                    unselectedIcon = Icons.Outlined.Settings
-            )
+        BottomNavItem(
+            route = Screen.Settings.route,
+            title = "Settings",
+            selectedIcon = Icons.Filled.PlayArrow,
+            unselectedIcon = Icons.Outlined.Settings
+        )
 }
 
 @Composable
@@ -73,10 +76,10 @@ fun AppBottomNavigation(navController: NavController, modifier: Modifier = Modif
     // Customizing NavigationBar to match "Cyberpunk" look
     // Dark background, no elevation (flat), lighter icons
     NavigationBar(
-            modifier = modifier,
-            containerColor = SurfaceSlate,
-            contentColor = Color.White,
-            tonalElevation = 0.dp
+        modifier = modifier,
+        containerColor = SurfaceSlate,
+        contentColor = Color.White,
+        tonalElevation = 0.dp
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
@@ -85,41 +88,41 @@ fun AppBottomNavigation(navController: NavController, modifier: Modifier = Modif
             val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
 
             NavigationBarItem(
-                    icon = {
-                        Icon(
-                                imageVector =
-                                        if (selected) item.selectedIcon else item.unselectedIcon,
-                                contentDescription = item.title
-                        )
-                    },
-                    label = {
-                        Text(text = item.title, style = MaterialTheme.typography.labelSmall)
-                    },
-                    selected = selected,
-                    onClick = {
-                        navController.navigate(item.route) {
-                            // Pop up to the start destination of the graph to
-                            // avoid building up a large stack of destinations
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            // Avoid multiple copies of the same destination when
-                            // reselecting the same item
-                            launchSingleTop = true
-                            // Restore state when reselecting a previously selected item
-                            restoreState = true
+                icon = {
+                    Icon(
+                        imageVector =
+                            if (selected) item.selectedIcon else item.unselectedIcon,
+                        contentDescription = item.title
+                    )
+                },
+                label = {
+                    Text(text = item.title, style = MaterialTheme.typography.labelSmall)
+                },
+                selected = selected,
+                onClick = {
+                    navController.navigate(item.route) {
+                        // Pop up to the start destination of the graph to
+                        // avoid building up a large stack of destinations
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
                         }
-                    },
-                    colors =
-                            NavigationBarItemDefaults.colors(
-                                    selectedIconColor = CyberpunkTeal,
-                                    selectedTextColor = CyberpunkTeal,
-                                    indicatorColor =
-                                            SurfaceSlate, // Make indicator invisible (blend with
-                                    // background) or slight tint
-                                    unselectedIconColor = Color.Gray,
-                                    unselectedTextColor = Color.Gray
-                            )
+                        // Avoid multiple copies of the same destination when
+                        // reselecting the same item
+                        launchSingleTop = true
+                        // Restore state when reselecting a previously selected item
+                        restoreState = true
+                    }
+                },
+                colors =
+                    NavigationBarItemDefaults.colors(
+                        selectedIconColor = CyberpunkTeal,
+                        selectedTextColor = CyberpunkTeal,
+                        indicatorColor =
+                            SurfaceSlate, // Make indicator invisible (blend with
+                        // background) or slight tint
+                        unselectedIconColor = Color.Gray,
+                        unselectedTextColor = Color.Gray
+                    )
             )
         }
     }

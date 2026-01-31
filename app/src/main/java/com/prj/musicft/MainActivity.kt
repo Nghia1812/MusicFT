@@ -34,11 +34,21 @@ import com.prj.musicft.presentation.theme.MusicFTTheme
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+import androidx.compose.runtime.collectAsState
+import com.prj.musicft.domain.model.ThemeMode
+import com.prj.musicft.presentation.settings.SettingsViewModel
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MusicFTTheme { MusicFTApp() } }
+        setContent {
+            val settingsViewModel: SettingsViewModel = hiltViewModel()
+            val settingsState by settingsViewModel.settingsState.collectAsState()
+            val isDarkTheme = settingsState?.themeMode == ThemeMode.DARK
+
+            MusicFTTheme(darkTheme = isDarkTheme) { MusicFTApp() }
+        }
         Timber.plant(MyTimberTree())
     }
 }
@@ -163,9 +173,9 @@ fun MusicFTApp() {
                 }
 
                 composable(Screen.Settings.route) {
-                    androidx.compose.material3.Text(
-                        "Settings Screen",
-                        color = androidx.compose.ui.graphics.Color.White
+                    com.prj.musicft.presentation.settings.SettingsScreen(
+                        // No onNavigateBack needed for main tab usually, but if needed:
+                        // onNavigateBack = { navController.popBackStack() }
                     )
                 }
 
