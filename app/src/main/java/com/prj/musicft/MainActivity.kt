@@ -152,6 +152,16 @@ fun MusicFTApp() {
                     )
                 }
 
+                composable(Screen.Search.route) {
+                    com.prj.musicft.presentation.search.SearchScreen(
+                        onSongClick = { song ->
+                            navController.currentBackStackEntry?.savedStateHandle?.set("song", song)
+                            navController.currentBackStackEntry?.savedStateHandle?.set("forcePlay", true)
+                            navController.navigate(Screen.Player.route)
+                        }
+                    )
+                }
+
                 composable(Screen.Settings.route) {
                     androidx.compose.material3.Text(
                         "Settings Screen",

@@ -35,14 +35,23 @@ sealed class BottomNavItem(
                     unselectedIcon = Icons.Outlined.Home
             )
     object Library :
-            BottomNavItem(
-                    route = Screen.Library.route,
-                    title = "Library",
-                    selectedIcon = Icons.Filled.PlayArrow, // Placeholder, usually a custom icon
-                    // Using LibraryMusic as closest material equivalent to the 'folder/music' icon
-                    // in image
-                    unselectedIcon = Icons.Outlined.PlayArrow //TODO: Later add image vector manually
-            )
+        BottomNavItem(
+            route = Screen.Library.route,
+            title = "Library",
+            selectedIcon = Icons.Filled.PlayArrow, // Placeholder, usually a custom icon
+            // Using LibraryMusic as closest material equivalent to the 'folder/music' icon
+            // in image
+            unselectedIcon = Icons.Outlined.PlayArrow //TODO: Later add image vector manually
+        )
+
+    object Search :
+        BottomNavItem(
+            route = Screen.Search.route,
+            title = "Search",
+            selectedIcon = Icons.Filled.Search,
+            unselectedIcon = Icons.Outlined.Search
+        )
+
     object Settings :
             BottomNavItem(
                     route = Screen.Settings.route,
@@ -54,7 +63,12 @@ sealed class BottomNavItem(
 
 @Composable
 fun AppBottomNavigation(navController: NavController, modifier: Modifier = Modifier) {
-    val items = listOf(BottomNavItem.Home, BottomNavItem.Library, BottomNavItem.Settings)
+    val items = listOf(
+        BottomNavItem.Home,
+        BottomNavItem.Search,
+        BottomNavItem.Library,
+        BottomNavItem.Settings
+    )
 
     // Customizing NavigationBar to match "Cyberpunk" look
     // Dark background, no elevation (flat), lighter icons
