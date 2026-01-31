@@ -21,4 +21,5 @@ interface PlaylistRepository {
             toPosition: Int
     ) // Future
     suspend fun clearPlaylist(playlistId: Long)
+    fun getPlaylistsContainingSong(songId: Long): Flow<List<Long>>
 }

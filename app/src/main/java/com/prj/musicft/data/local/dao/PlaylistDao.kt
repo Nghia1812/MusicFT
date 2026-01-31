@@ -4,6 +4,7 @@ import androidx.room.*
 import com.prj.musicft.data.local.entity.PlaylistEntity
 import com.prj.musicft.data.local.entity.PlaylistSongCrossRef
 import com.prj.musicft.data.local.entity.PlaylistWithSongs
+import com.prj.musicft.data.local.model.PlaylistWithSongCount
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -11,8 +12,17 @@ interface PlaylistDao {
 
     // ========== QUERIES ==========
 
-    @Query("SELECT * FROM playlists ORDER BY created_at DESC")
-    fun getAllPlaylists(): Flow<List<PlaylistEntity>>
+    @Transaction
+    @Query(
+        """
+        SELECT p.*, COUNT(ps.song_id) as song_count
+        FROM playlists p
+        LEFT JOIN playlist_songs ps ON p.id = ps.playlist_id
+        GROUP BY p.id
+        ORDER BY p.created_at DESC
+        """
+    )
+    fun getAllPlaylists(): Flow<List<PlaylistWithSongCount>>
 
     @Query("SELECT * FROM playlists WHERE id = :playlistId")
     suspend fun getPlaylistById(playlistId: Long): PlaylistEntity?
@@ -41,6 +51,9 @@ interface PlaylistDao {
     suspend fun addSongToPlaylist(crossRef: PlaylistSongCrossRef)
 
     @Delete suspend fun removeSongFromPlaylist(crossRef: PlaylistSongCrossRef)
+
+    @Query("DELETE FROM playlist_songs WHERE playlist_id = :playlistId AND song_id = :songId")
+    suspend fun deleteSongFromPlaylist(playlistId: Long, songId: Long)
 
     @Query("DELETE FROM playlist_songs WHERE playlist_id = :playlistId")
     suspend fun clearPlaylist(playlistId: Long)
@@ -82,4 +95,7 @@ interface PlaylistDao {
     """
     )
     suspend fun getSongCount(playlistId: Long): Int
+
+    @Query("SELECT playlist_id FROM playlist_songs WHERE song_id = :songId")
+    fun getPlaylistsForSong(songId: Long): Flow<List<Long>>
 }

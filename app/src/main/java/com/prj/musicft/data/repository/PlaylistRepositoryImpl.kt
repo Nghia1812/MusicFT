@@ -16,12 +16,8 @@ class PlaylistRepositoryImpl @Inject constructor(private val playlistDao: Playli
 
     override fun getAllPlaylists(): Flow<List<Playlist>> {
         return playlistDao.getAllPlaylists().map { list ->
-            list.map { playlist ->
-                // Note: Need song count.
-                // Doing a query per playlist in a loop inside flow map is bad for performance.
-                // Ideally, DAO should return PlaylistWithSongCount.
-                // For now, returning 0 or we can optimize DAO later.
-                playlist.toDomain(songCount = 0)
+            list.map { item ->
+                item.playlist.toDomain(songCount = item.songCount)
             }
         }
     }
@@ -73,16 +69,9 @@ class PlaylistRepositoryImpl @Inject constructor(private val playlistDao: Playli
     }
 
     override suspend fun removeSongFromPlaylist(playlistId: Long, songId: Long) {
-        // Need position to remove correctly or remove by ID pair.
-        // DAO removeSongFromPlaylist takes CrossRef.
-        // We need to find the CrossRef first.
-        // This is inefficient without direct delete query.
-        // Will rely on logic:
-        // 1. Get all refs
-        // 2. Find matches
-        // 3. Delete
-        // ideally add deleteSongFromPlaylist(pid, sid) to DAO.
-        // For now, Placeholder standard impl
+        playlistDao.deleteSongFromPlaylist(playlistId, songId)
+        // Note: We should probably re-order (decrement positions) here to fill the gap.
+        // For simplicity in this phase, we skip complex reordering.
     }
 
     override suspend fun clearPlaylist(playlistId: Long) {
@@ -95,5 +84,9 @@ class PlaylistRepositoryImpl @Inject constructor(private val playlistDao: Playli
             toPosition: Int
     ) {
         // Complex logic, standard for Phase 2 as per spec.
+    }
+
+    override fun getPlaylistsContainingSong(songId: Long): Flow<List<Long>> {
+        return playlistDao.getPlaylistsForSong(songId)
     }
 }
