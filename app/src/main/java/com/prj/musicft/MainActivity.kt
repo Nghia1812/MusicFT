@@ -1,7 +1,7 @@
 package com.prj.musicft
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -36,10 +36,14 @@ import timber.log.Timber
 
 import androidx.compose.runtime.collectAsState
 import com.prj.musicft.domain.model.ThemeMode
+import com.prj.musicft.presentation.library.CollectionSongListScreen
+import com.prj.musicft.presentation.library.LibraryScreen
+import com.prj.musicft.presentation.search.SearchScreen
+import com.prj.musicft.presentation.settings.SettingsScreen
 import com.prj.musicft.presentation.settings.SettingsViewModel
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -62,7 +66,7 @@ fun MusicFTApp() {
     // Check current route to hide bottom bar on Splash
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val showBottomBar = currentRoute != Screen.Splash.route
+    val showBottomBar = currentRoute != Screen.Splash.route && currentRoute != Screen.PermissionRequest.route
     
     // Hide MiniPlayer when on Player screen
     val showMiniPlayerBar = showBottomBar && currentRoute != Screen.Player.route
@@ -121,6 +125,28 @@ fun MusicFTApp() {
                             navController.navigate(Screen.Home.route) {
                                 popUpTo(Screen.Splash.route) { inclusive = true }
                             }
+                        },
+                        onNavigateToPermission = {
+                            navController.navigate(Screen.PermissionRequest.route) {
+                                popUpTo(Screen.Splash.route) { inclusive = true }
+                            }
+                        }
+                    )
+                }
+
+                composable(Screen.PermissionRequest.route) {
+                    com.prj.musicft.presentation.splash.PermissionRequestScreen(
+                        onPermissionGranted = {
+                            // Navigate back to Splash check flow
+                            navController.navigate(Screen.Splash.route) {
+                                popUpTo(0) // Clear entire stack to restart from Splash
+                            }
+                        },
+                        onDenyOrIgnore = {
+                            // Go to Home (empty state)
+                            navController.navigate(Screen.Home.route) {
+                                popUpTo(0) // Clear entire stack so Back button exits app
+                            }
                         }
                     )
                 }
@@ -139,7 +165,7 @@ fun MusicFTApp() {
                 }
 
                 composable(Screen.Library.route) {
-                    com.prj.musicft.presentation.library.LibraryScreen(
+                    LibraryScreen(
                         onNavigateToCollection = { type ->
                             navController.navigate(Screen.CollectionList.createRoute(type.name))
                         },
@@ -152,7 +178,7 @@ fun MusicFTApp() {
                 }
 
                 composable(Screen.CollectionList.route) {
-                    com.prj.musicft.presentation.library.CollectionSongListScreen(
+                    CollectionSongListScreen(
                         onNavigateUp = { navController.popBackStack() },
                         onSongClick = { song ->
                             navController.currentBackStackEntry?.savedStateHandle?.set("song", song)
@@ -163,7 +189,7 @@ fun MusicFTApp() {
                 }
 
                 composable(Screen.Search.route) {
-                    com.prj.musicft.presentation.search.SearchScreen(
+                    SearchScreen(
                         onSongClick = { song ->
                             navController.currentBackStackEntry?.savedStateHandle?.set("song", song)
                             navController.currentBackStackEntry?.savedStateHandle?.set("forcePlay", true)
@@ -173,7 +199,7 @@ fun MusicFTApp() {
                 }
 
                 composable(Screen.Settings.route) {
-                    com.prj.musicft.presentation.settings.SettingsScreen(
+                    SettingsScreen(
                         // No onNavigateBack needed for main tab usually, but if needed:
                         // onNavigateBack = { navController.popBackStack() }
                     )

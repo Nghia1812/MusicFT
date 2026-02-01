@@ -11,4 +11,5 @@ sealed class Screen(val route: String) {
     object CollectionList : Screen("collection_list/{type}") {
         fun createRoute(type: String) = "collection_list/$type"
     }
+    object PermissionRequest : Screen("permission_request")
 }

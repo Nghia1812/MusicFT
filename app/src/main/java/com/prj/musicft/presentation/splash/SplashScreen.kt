@@ -23,12 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prj.musicft.data.repository.FullSyncRepository
-import com.prj.musicft.presentation.theme.CyberpunkMagenta
-import com.prj.musicft.presentation.theme.CyberpunkTeal
-import com.prj.musicft.presentation.theme.DarkBackground
-import com.prj.musicft.presentation.theme.NeonGradientEnd
-import com.prj.musicft.presentation.theme.NeonGradientStart
-import com.prj.musicft.presentation.theme.SurfaceSlate
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.delay
@@ -38,7 +33,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(private val syncRepository: FullSyncRepository) :
-        ViewModel() {
+    ViewModel() {
 
     private val _uiState = MutableStateFlow<SplashUiState>(SplashUiState.Loading)
     val uiState = _uiState.asStateFlow()
@@ -69,40 +64,37 @@ sealed class SplashUiState {
 }
 
 @Composable
-fun SplashScreen(onNavigateToHome: () -> Unit, viewModel: SplashViewModel = hiltViewModel()) {
+fun SplashScreen(
+    onNavigateToHome: () -> Unit,
+    onNavigateToPermission: () -> Unit,
+    viewModel: SplashViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
-    // Permission Logic
+    // Check permissions on start
     val permissions =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                arrayOf(
-                        Manifest.permission.READ_MEDIA_AUDIO,
-                        Manifest.permission.POST_NOTIFICATIONS
-                )
-            } else {
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-            }
-
-    val launcher =
-            rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.RequestMultiplePermissions()
-            ) { results ->
-                // Proceed regardless of result for now (simplification),
-                // ideally show rationale if denied.
-                viewModel.onPermissionsGranted()
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(
+                Manifest.permission.READ_MEDIA_AUDIO,
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+        } else {
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
 
     LaunchedEffect(Unit) {
         val allGranted =
-                permissions.all {
-                    ContextCompat.checkSelfPermission(context, it) ==
-                            PackageManager.PERMISSION_GRANTED
-                }
+            permissions.all {
+                ContextCompat.checkSelfPermission(context, it) ==
+                        PackageManager.PERMISSION_GRANTED
+            }
         if (allGranted) {
             viewModel.onPermissionsGranted()
         } else {
-            launcher.launch(permissions)
+            // Delay slightly for branding impact or just go straight
+            delay(500)
+            onNavigateToPermission()
         }
     }
 
@@ -114,74 +106,77 @@ fun SplashScreen(onNavigateToHome: () -> Unit, viewModel: SplashViewModel = hilt
 
     // UI
     Box(
-            modifier = Modifier.fillMaxSize().background(DarkBackground),
-            contentAlignment = Alignment.Center
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
     ) {
         Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             // Animate Logo
             val infiniteTransition = rememberInfiniteTransition(label = "Pulse")
             val scale by
-                    infiniteTransition.animateFloat(
-                            initialValue = 0.9f,
-                            targetValue = 1.1f,
-                            animationSpec =
-                                    infiniteRepeatable(
-                                            animation = tween(1000),
-                                            repeatMode = RepeatMode.Reverse
-                                    ),
-                            label = "Scale"
-                    )
+            infiniteTransition.animateFloat(
+                initialValue = 0.9f,
+                targetValue = 1.1f,
+                animationSpec =
+                    infiniteRepeatable(
+                        animation = tween(1000),
+                        repeatMode = RepeatMode.Reverse
+                    ),
+                label = "Scale"
+            )
 
             // Logo Placeholder (Gradient Circle)
             Box(
-                    modifier =
-                            Modifier.size(120.dp)
-                                    .scale(scale)
-                                    .background(
-                                            brush =
-                                                    Brush.linearGradient(
-                                                            colors =
-                                                                    listOf(
-                                                                            NeonGradientStart,
-                                                                            NeonGradientEnd
-                                                                    )
-                                                    ),
-                                            shape = CircleShape
-                                    ),
-                    contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .size(120.dp)
+                        .scale(scale)
+                        .background(
+                            brush =
+                                Brush.linearGradient(
+                                    colors =
+                                        listOf(
+                                            MaterialTheme.colorScheme.tertiary,
+                                            MaterialTheme.colorScheme.primary
+                                        )
+                                ),
+                            shape = CircleShape
+                        ),
+                contentAlignment = Alignment.Center
             ) {
                 // Icon or Initial
                 Text(
-                        text = "FT",
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = Color.White
+                    text = "FT",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                    text = "Cyberpunk Audio",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = CyberpunkTeal
+                text = "Cyberpunk Audio",
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             if (state is SplashUiState.Scanning) {
                 LinearProgressIndicator(
-                        modifier = Modifier.width(150.dp),
-                        color = CyberpunkMagenta,
-                        trackColor = SurfaceSlate
+                    modifier = Modifier.width(150.dp),
+                    color = MaterialTheme.colorScheme.tertiary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                        text = "Syncing Library...",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
+                    text = "Syncing Library...",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
