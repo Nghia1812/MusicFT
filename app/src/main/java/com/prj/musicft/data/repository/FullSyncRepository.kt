@@ -31,6 +31,9 @@ constructor(
         private val artistDao: ArtistDao
 ) {
 
+    private val _progress = MutableStateFlow(0f)
+    val progress: StateFlow<Float> = _progress.asStateFlow()
+
     private val _isScanning = MutableStateFlow(false)
     val isScanning: StateFlow<Boolean> = _isScanning.asStateFlow()
 
@@ -46,6 +49,7 @@ constructor(
         scanJob =
                 scope.launch(Dispatchers.IO) {
                     _isScanning.value = true
+                    _progress.value = 0f
                     try {
                         // Clear cache on new scan
                         artistCache.clear()
@@ -60,6 +64,7 @@ constructor(
                         e.printStackTrace()
                     } finally {
                         _isScanning.value = false
+                        _progress.value = 1f
                     }
                 }
     }
@@ -69,7 +74,10 @@ constructor(
         // We will resolve them lazily or in batch.
         // For simplicity and robustness, we'll process song-by-song but use the cache.
 
-        for (meta in scannedFiles) {
+        val totalFiles = scannedFiles.size
+        for ((index, meta) in scannedFiles.withIndex()) {
+            _progress.value = index.toFloat() / totalFiles.coerceAtLeast(1)
+            
             Timber.i("Process Song: $meta")
             // A. Resolve Artist
 //            val artistId = getOrCreateArtistId(meta.artist)
@@ -133,6 +141,7 @@ constructor(
                 }
             }
         }
+        _progress.value = 1f
 
         // Step 3: Cleanup (Optional/Phase 2)
         // Check for songs in DB that are no longer in scannedFiles (deleted from disk).

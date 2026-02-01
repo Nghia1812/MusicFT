@@ -29,6 +29,9 @@ import com.prj.musicft.domain.model.Playlist
 import com.prj.musicft.domain.model.Song
 import com.prj.musicft.presentation.theme.CyberpunkTeal
 import com.prj.musicft.presentation.theme.SurfaceSlate
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import com.prj.musicft.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -225,7 +228,7 @@ fun PlaylistItem(playlist: Playlist, isAdded: Boolean, onClick: () -> Unit) {
         ) {
              Icon(
                  // Use a generic music icon or the first letter
-                 imageVector = Icons.Default.AccountCircle, // TODO: Placeholder
+                 imageVector = ImageVector.vectorResource(R.drawable.ic_playlist),
                  contentDescription = null,
                  tint = MaterialTheme.colorScheme.onSurfaceVariant
              )

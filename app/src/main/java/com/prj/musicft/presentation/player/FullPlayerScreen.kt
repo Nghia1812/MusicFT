@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.prj.musicft.domain.model.RepeatMode
 import com.prj.musicft.domain.model.Song
+import androidx.compose.ui.res.vectorResource
+import com.prj.musicft.R
 
 import com.prj.musicft.presentation.common.UiState
 
@@ -237,7 +240,7 @@ fun FullPlayerContent(
             // Shuffle
             IconButton(onClick = viewModel::onShuffleClick) {
                 Icon(
-                    imageVector = Icons.Default.PlayArrow, //TODO: Add icon manually
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_shuffle),
                     contentDescription = "Shuffle",
                     tint = if (state.isShuffleEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -249,7 +252,7 @@ fun FullPlayerContent(
                 modifier = Modifier.size(48.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.PlayArrow, //TODO: Add icon manually
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_previous),
                     contentDescription = "Previous",
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(32.dp)
@@ -265,7 +268,7 @@ fun FullPlayerContent(
                 )
             ) {
                 Icon(
-                    imageVector = if (state.isPlaying) Icons.Default.PlayArrow else Icons.Default.PlayArrow, //TODO: Add icon manually
+                    imageVector = if (state.isPlaying) ImageVector.vectorResource(R.drawable.ic_pause) else Icons.Default.PlayArrow,
                     contentDescription = if (state.isPlaying) "Pause" else "Play",
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(40.dp)
@@ -278,7 +281,7 @@ fun FullPlayerContent(
                 modifier = Modifier.size(48.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.PlayArrow, //TODO: Add icon manually
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_next),
                     contentDescription = "Next",
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(32.dp)
@@ -288,8 +291,8 @@ fun FullPlayerContent(
             // Repeat
             IconButton(onClick = viewModel::onRepeatClick) {
                  val icon = when(state.repeatMode) {
-                     RepeatMode.ONE -> Icons.Default.PlayArrow //TODO: Add icon manually
-                     else -> Icons.Default.PlayArrow //TODO: Add icon manually
+                     RepeatMode.ONE -> ImageVector.vectorResource(R.drawable.ic_replay)
+                     else -> ImageVector.vectorResource(R.drawable.ic_replay)
                  }
                  val tint = if (state.repeatMode == RepeatMode.OFF) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary
                  

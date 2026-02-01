@@ -22,7 +22,14 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.compose.foundation.border
+import androidx.compose.material.icons.Icons
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.prj.musicft.data.repository.FullSyncRepository
+import com.prj.musicft.presentation.theme.*
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -40,9 +47,19 @@ class SplashViewModel @Inject constructor(private val syncRepository: FullSyncRe
 
     fun onPermissionsGranted() {
         viewModelScope.launch {
-            _uiState.value = SplashUiState.Scanning
+            _uiState.value = SplashUiState.Scanning(0f)
             // Start sync
             syncRepository.startSync(this)
+
+            // Observe progress
+            val progressJob = launch {
+                syncRepository.progress.collect { progress ->
+                    // Only update if we are still in scanning state
+                    if (_uiState.value is SplashUiState.Scanning) {
+                        _uiState.value = SplashUiState.Scanning(progress)
+                    }
+                }
+            }
 
             // Wait for sync or minimum delay
             // Ideally, we observe syncRepository.isScanning
@@ -52,6 +69,7 @@ class SplashViewModel @Inject constructor(private val syncRepository: FullSyncRe
             // Simple check (in real app, observe existing flow)
             // Assuming sync is fast or happens in background.
             // We transition to Home.
+            progressJob.cancel()
             _uiState.value = SplashUiState.Completed
         }
     }
@@ -59,7 +77,7 @@ class SplashViewModel @Inject constructor(private val syncRepository: FullSyncRe
 
 sealed class SplashUiState {
     object Loading : SplashUiState()
-    object Scanning : SplashUiState()
+    data class Scanning(val progress: Float) : SplashUiState()
     object Completed : SplashUiState()
 }
 
@@ -93,10 +111,12 @@ fun SplashScreen(
             viewModel.onPermissionsGranted()
         } else {
             // Delay slightly for branding impact or just go straight
-            delay(500)
+            delay(1500)
             onNavigateToPermission()
         }
     }
+
+
 
     LaunchedEffect(state) {
         if (state is SplashUiState.Completed) {
@@ -108,77 +128,148 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(
+                brush = Brush.radialGradient(
+                    colors = listOf(TealGlow, DeepDarkBackground),
+                    center = Offset.Unspecified, // Center
+                    radius = 800f
+                )
+            ),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
         ) {
-            // Animate Logo
-            val infiniteTransition = rememberInfiniteTransition(label = "Pulse")
-            val scale by
-            infiniteTransition.animateFloat(
-                initialValue = 0.9f,
-                targetValue = 1.1f,
-                animationSpec =
-                    infiniteRepeatable(
-                        animation = tween(1000),
-                        repeatMode = RepeatMode.Reverse
-                    ),
-                label = "Scale"
-            )
+            Spacer(modifier = Modifier.weight(1f))
 
-            // Logo Placeholder (Gradient Circle)
+            // Logo Container
             Box(
-                modifier =
-                    Modifier
-                        .size(120.dp)
-                        .scale(scale)
-                        .background(
-                            brush =
-                                Brush.linearGradient(
-                                    colors =
-                                        listOf(
-                                            MaterialTheme.colorScheme.tertiary,
-                                            MaterialTheme.colorScheme.primary
-                                        )
-                                ),
-                            shape = CircleShape
-                        ),
+                modifier = Modifier
+                    .size(140.dp)
+                    .background(
+                        color = DarkSurface,
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(32.dp)
+                    )
+                    // Add a subtle border or glow if possible, but basic shape first
+                    .border(
+                        width = 1.dp,
+                        color = DarkBorder,
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(32.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
-                // Icon or Initial
-                Text(
-                    text = "FT",
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
+                 // Using the requested icon
+                 Icon(
+                     painter = androidx.compose.ui.res.painterResource(id = com.prj.musicft.R.drawable.ic_app_launcher),
+                     contentDescription = "Logo",
+                     tint = Color.Unspecified,
+                     modifier = Modifier.size(64.dp)
+                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
+            // Title
             Text(
-                text = "Cyberpunk Audio",
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary
+                text = "SONUS",
+                style = MaterialTheme.typography.displayMedium.copy(
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    letterSpacing = 2.sp
+                ),
+                color = Color.White
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (state is SplashUiState.Scanning) {
-                LinearProgressIndicator(
-                    modifier = Modifier.width(150.dp),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant
+            // Subtitle with lines
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Divider(
+                    color = Color.DarkGray,
+                    modifier = Modifier.width(40.dp)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "Syncing Library...",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "THE FUTURE OF SOUND",
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        letterSpacing = 2.sp,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.Medium
+                    ),
+                    color = SonusTeal
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Divider(
+                    color = Color.DarkGray,
+                    modifier = Modifier.width(40.dp)
                 )
             }
+
+            Spacer(modifier = Modifier.weight(0.8f))
+
+            // Progress Section
+            // Calculate progress for animation
+            val currentProgress = (state as? SplashUiState.Scanning)?.progress ?: 0f
+            val animatedProgress by animateFloatAsState(
+                targetValue = currentProgress,
+                animationSpec = tween(durationMillis = 300, easing = LinearEasing),
+                label = "ProgressAnimation"
+            )
+            val percentage = (animatedProgress * 100).toInt()
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 48.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "INITIALIZING ENGINE",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                            letterSpacing = 1.sp
+                        ),
+                        color = SlateGrey
+                    )
+                    Text(
+                        text = "$percentage%",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                        ),
+                        color = SonusTeal
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                LinearProgressIndicator(
+                    progress = animatedProgress,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp),
+                    color = SonusTeal,
+                    trackColor = DarkTrack
+                )
+            }
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Footer
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "PRECISION AUDIO ARCHITECTURE",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontSize = 10.sp,
+                        letterSpacing = 2.sp
+                    ),
+                    color = SlateGrey.copy(alpha = 0.6f)
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

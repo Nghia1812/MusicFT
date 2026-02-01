@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import androidx.compose.ui.res.vectorResource
+import com.prj.musicft.R
 import com.prj.musicft.domain.model.Song
 import com.prj.musicft.presentation.theme.*
 
@@ -104,7 +106,7 @@ fun SongDetailOptionModal(
                 onClick = onShareSong
             )
             OptionItem(
-                icon = Icons.Default.Star, //TODO: Replace with icons manually
+                icon = ImageVector.vectorResource(R.drawable.ic_album),
                 text = "Go to Album",
                 color = MaterialTheme.colorScheme.primary,
                 onClick = onGoToAlbum

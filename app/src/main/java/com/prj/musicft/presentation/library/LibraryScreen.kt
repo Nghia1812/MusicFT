@@ -25,6 +25,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.res.vectorResource
+import com.prj.musicft.R
 import com.prj.musicft.domain.model.Song
 import com.prj.musicft.presentation.common.SongListItem
 import com.prj.musicft.presentation.common.UiState
@@ -113,7 +115,7 @@ fun LibraryContent(
                     LibraryCard(
                         title = "Albums",
                         count = "${data.albumCount} Saved",
-                        icon = Icons.AutoMirrored.Filled.List, //TODO: Add icons
+                        icon = ImageVector.vectorResource(R.drawable.ic_album),
                         modifier = Modifier.weight(1f),
                         onClick = { onNavigateToCollection(CollectionType.Albums) }
                     )

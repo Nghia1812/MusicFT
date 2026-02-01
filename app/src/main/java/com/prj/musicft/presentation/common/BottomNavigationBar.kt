@@ -2,65 +2,66 @@ package com.prj.musicft.presentation.common
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.PlayArrow
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.prj.musicft.R
 import com.prj.musicft.presentation.navigation.Screen
 
 
 sealed class BottomNavItem(
     val route: String,
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
+    val title: String
 ) {
-    object Home :
-        BottomNavItem(
-            route = Screen.Home.route,
-            title = "Home",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home
-        )
+    @Composable
+    abstract fun getIcon(selected: Boolean): ImageVector
 
-    object Library :
-        BottomNavItem(
-            route = Screen.Library.route,
-            title = "Library",
-            selectedIcon = Icons.Filled.PlayArrow, // Placeholder, usually a custom icon
-            // Using LibraryMusic as closest material equivalent to the 'folder/music' icon
-            // in image
-            unselectedIcon = Icons.Outlined.PlayArrow //TODO: Later add image vector manually
-        )
+    object Home : BottomNavItem(
+        route = Screen.Home.route,
+        title = "Home"
+    ) {
+        @Composable
+        override fun getIcon(selected: Boolean): ImageVector =
+            if (selected) Icons.Filled.Home else Icons.Outlined.Home
+    }
 
-    object Search :
-        BottomNavItem(
-            route = Screen.Search.route,
-            title = "Search",
-            selectedIcon = Icons.Filled.Search,
-            unselectedIcon = Icons.Outlined.Search
-        )
+    object Library : BottomNavItem(
+        route = Screen.Library.route,
+        title = "Library"
+    ) {
+        @Composable
+        override fun getIcon(selected: Boolean): ImageVector =
+            ImageVector.vectorResource(R.drawable.ic_library)
+    }
 
-    object Settings :
-        BottomNavItem(
-            route = Screen.Settings.route,
-            title = "Settings",
-            selectedIcon = Icons.Filled.PlayArrow,
-            unselectedIcon = Icons.Outlined.Settings
-        )
+    object Search : BottomNavItem(
+        route = Screen.Search.route,
+        title = "Search"
+    ) {
+        @Composable
+        override fun getIcon(selected: Boolean): ImageVector =
+            if (selected) Icons.Filled.Search else Icons.Outlined.Search
+    }
+
+    object Settings : BottomNavItem(
+        route = Screen.Settings.route,
+        title = "Settings"
+    ) {
+        @Composable
+        override fun getIcon(selected: Boolean): ImageVector =
+            ImageVector.vectorResource(R.drawable.ic_settings)
+    }
 }
 
 @Composable
@@ -89,8 +90,7 @@ fun AppBottomNavigation(navController: NavController, modifier: Modifier = Modif
             NavigationBarItem(
                 icon = {
                     Icon(
-                        imageVector =
-                            if (selected) item.selectedIcon else item.unselectedIcon,
+                        imageVector = item.getIcon(selected),
                         contentDescription = item.title
                     )
                 },

@@ -29,6 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import com.prj.musicft.R
 import com.prj.musicft.domain.model.Song
 import com.prj.musicft.presentation.common.SongListItem
 import com.prj.musicft.presentation.common.UiState
@@ -237,7 +240,7 @@ fun CollectionSongListScreen(
                                         shape = RoundedCornerShape(24.dp)
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Default.Refresh, //TODO: Add refresh icon
+                                            imageVector = ImageVector.vectorResource(R.drawable.ic_shuffle),
                                             tint = Color.White.copy(alpha = 0.2f),
                                             contentDescription = null,
                                             modifier = Modifier.size(20.dp)

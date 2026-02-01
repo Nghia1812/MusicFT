@@ -22,6 +22,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.res.vectorResource
+import com.prj.musicft.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,7 +106,7 @@ fun SettingsScreen(
             SettingsSection(title = "GENERAL") {
                 SettingsGroup {
                     SettingsItem(
-                        icon = Icons.Default.Info, //TODO: Add icons
+                        icon = ImageVector.vectorResource(R.drawable.ic_theme),
                         title = "Theme",
                         subtitle = if (isDark) "Dark Mode" else "Light Mode",
                         trailingContent = {
@@ -115,7 +117,7 @@ fun SettingsScreen(
                         }
                     )
                     SettingsItem(
-                        icon = Icons.Default.Info, //TODO: Add icons
+                        icon = ImageVector.vectorResource(R.drawable.ic_language),
                         title = "Language",
                         subtitle = displayLanguage, // Display current language name
                         showChevron = true,
@@ -128,13 +130,13 @@ fun SettingsScreen(
             SettingsSection(title = "AUDIO") {
                 SettingsGroup {
                     SettingsItem(
-                        icon = Icons.Default.Info, //TODO: Add icons
+                        icon = ImageVector.vectorResource(R.drawable.ic_stat),
                         title = "Equalizer",
                         subtitle = "Custom preset active",
                         showChevron = true
                     )
                     SettingsItem(
-                        icon = Icons.Default.Info, //TODO: Add icons
+                        icon = ImageVector.vectorResource(R.drawable.ic_settings),
                         title = "Crossfade",
                         subtitle = "5 seconds overlap",
                         trailingContent = {
@@ -151,7 +153,7 @@ fun SettingsScreen(
                         }
                     )
                     SettingsItem(
-                        icon = Icons.Default.Info, //TODO: Add icons
+                        icon = ImageVector.vectorResource(R.drawable.ic_album),
                         title = "Audio Quality",
                         subtitle = "Lossless (High)",
                         trailingContent = {
@@ -175,13 +177,13 @@ fun SettingsScreen(
             SettingsSection(title = "ABOUT") {
                 SettingsGroup {
                     SettingsItem(
-                        icon = Icons.Default.Info, //TODO: Add icons
+                        icon = ImageVector.vectorResource(R.drawable.ic_privacy),
                         title = "Privacy Policy",
                         showChevron = true,
                         onClick = { showPrivacyDialog = true }
                     )
                     SettingsItem(
-                        icon = Icons.Default.Info,
+                        icon = ImageVector.vectorResource(R.drawable.ic_app_launcher), // Using app launcher as version icon
                         title = "Version",
                         subtitle = "Built for audiophiles",
                         trailingContent = {
