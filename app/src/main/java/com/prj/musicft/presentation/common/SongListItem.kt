@@ -54,7 +54,7 @@ fun SongListItem(
                 maxLines = 1
             )
             Text(
-                text = song.artistName,
+                text = "${song.artistName} • ${formatDuration(song.duration)}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1
@@ -66,8 +66,10 @@ fun SongListItem(
             Icon(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = "Favorite",
-                tint = MaterialTheme.colorScheme.tertiary, // Use tertiary for accents like favorite if appropriate, or primary
-                modifier = Modifier.size(24.dp).padding(end = 4.dp)
+                tint = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(end = 4.dp)
             )
         }
 
@@ -80,4 +82,11 @@ fun SongListItem(
             )
         }
     }
+}
+
+private fun formatDuration(durationMillis: Long): String {
+    val totalSeconds = durationMillis / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return String.format("%d:%02d", minutes, seconds)
 }

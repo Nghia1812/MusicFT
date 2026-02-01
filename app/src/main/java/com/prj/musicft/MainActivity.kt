@@ -167,7 +167,11 @@ fun MusicFTApp() {
                 composable(Screen.Library.route) {
                     LibraryScreen(
                         onNavigateToCollection = { type ->
-                            navController.navigate(Screen.CollectionList.createRoute(type.name))
+                            if (type == com.prj.musicft.presentation.library.CollectionType.Playlists) {
+                                navController.navigate(Screen.Playlists.route)
+                            } else {
+                                navController.navigate(Screen.CollectionList.createRoute(type.name))
+                            }
                         },
                         onSongClick = { song ->
                             navController.currentBackStackEntry?.savedStateHandle?.set("song", song)
@@ -177,7 +181,31 @@ fun MusicFTApp() {
                     )
                 }
 
-                composable(Screen.CollectionList.route) {
+                composable(Screen.Playlists.route) {
+                    com.prj.musicft.presentation.library.PlaylistScreen(
+                        onNavigateUp = { navController.popBackStack() },
+                        onPlaylistClick = { playlistId ->
+                            navController.navigate(
+                                Screen.CollectionList.createRoute(
+                                    com.prj.musicft.presentation.library.CollectionType.Playlists.name,
+                                    playlistId
+                                )
+                            )
+                        }
+                    )
+                }
+
+                composable(
+                    route = Screen.CollectionList.route,
+                    arguments = listOf(
+                        androidx.navigation.navArgument("type") { type = androidx.navigation.NavType.StringType },
+                        androidx.navigation.navArgument("playlistId") {
+                            type = androidx.navigation.NavType.StringType // Pass as string or Long, but nullable
+                            nullable = true
+                            defaultValue = null
+                        }
+                    )
+                ) {
                     CollectionSongListScreen(
                         onNavigateUp = { navController.popBackStack() },
                         onSongClick = { song ->

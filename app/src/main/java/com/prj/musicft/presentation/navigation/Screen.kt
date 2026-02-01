@@ -8,8 +8,15 @@ sealed class Screen(val route: String) {
     object Settings : Screen("settings")
     // Player might be a sheet, but could be a screen for full view
     object Player : Screen("player")
-    object CollectionList : Screen("collection_list/{type}") {
-        fun createRoute(type: String) = "collection_list/$type"
+    object Playlists : Screen("playlists")
+    object CollectionList : Screen("collection_list/{type}?playlistId={playlistId}") {
+        fun createRoute(type: String, playlistId: Long? = null): String {
+            return if (playlistId != null) {
+                "collection_list/$type?playlistId=$playlistId"
+            } else {
+                "collection_list/$type"
+            }
+        }
     }
     object PermissionRequest : Screen("permission_request")
 }

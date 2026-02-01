@@ -10,6 +10,8 @@ import com.prj.musicft.domain.usecase.CreatePlaylistUseCase
 import com.prj.musicft.domain.usecase.DeleteSongUseCase
 import com.prj.musicft.domain.usecase.GetAllPlaylistsUseCase
 import com.prj.musicft.domain.usecase.GetFavoriteSongsUseCase
+import com.prj.musicft.domain.usecase.GetPlaylistByIdUseCase
+import com.prj.musicft.domain.usecase.GetPlaylistSongsUseCase
 import com.prj.musicft.domain.usecase.GetPlaylistsContainingSongUseCase
 import com.prj.musicft.domain.usecase.GetRecentHistoryUseCase
 import com.prj.musicft.domain.usecase.RemoveSongFromPlaylistUseCase
@@ -34,6 +36,8 @@ class CollectionSongListViewModel @Inject constructor(
     private val getRecentHistoryUseCase: GetRecentHistoryUseCase,
     private val getAllPlaylistsUseCase: GetAllPlaylistsUseCase,
     private val getPlaylistsContainingSongUseCase: GetPlaylistsContainingSongUseCase,
+    private val getPlaylistSongsUseCase: GetPlaylistSongsUseCase,
+    private val getPlaylistByIdUseCase: GetPlaylistByIdUseCase,
     private val addSongToPlaylistUseCase: AddSongToPlaylistUseCase,
     private val removeSongFromPlaylistUseCase: RemoveSongFromPlaylistUseCase,
     private val createPlaylistUseCase: CreatePlaylistUseCase,
@@ -47,6 +51,10 @@ class CollectionSongListViewModel @Inject constructor(
     val uiState: StateFlow<UiState<List<Song>>> = _uiState.asStateFlow()
 
     private val collectionType: String = checkNotNull(savedStateHandle["type"])
+    private val playlistId: Long? = savedStateHandle.get<String>("playlistId")?.toLongOrNull() ?: savedStateHandle.get<Long>("playlistId")
+
+    private val _title = MutableStateFlow("Collection")
+    val title: StateFlow<String> = _title.asStateFlow()
 
     val playlists: StateFlow<List<Playlist>> = getAllPlaylistsUseCase()
         .stateIn(
@@ -62,6 +70,26 @@ class CollectionSongListViewModel @Inject constructor(
 
     init {
         loadSongs()
+        updateTitle()
+    }
+
+    private fun updateTitle() {
+        when (collectionType) {
+            CollectionType.Favorites.name -> _title.value = "Favorites"
+            CollectionType.History.name -> _title.value = "History"
+            CollectionType.Playlists.name -> {
+                if (playlistId != null) {
+                    viewModelScope.launch {
+                        getPlaylistByIdUseCase(playlistId).collectLatest { playlist ->
+                            _title.value = playlist?.name ?: "Playlist"
+                        }
+                    }
+                } else {
+                    _title.value = "Playlist"
+                }
+            }
+            else -> _title.value = collectionType
+        }
     }
 
     private fun loadSongs() {
@@ -78,6 +106,15 @@ class CollectionSongListViewModel @Inject constructor(
                             val songs = entries.mapNotNull { it.song }.distinctBy { it.id }
                             _uiState.value =
                                 if (songs.isEmpty()) UiState.Empty else UiState.Success(songs)
+                        }
+                    }
+                    CollectionType.Playlists.name -> {
+                        if (playlistId != null) {
+                            getPlaylistSongsUseCase(playlistId).collectLatest { songs ->
+                                _uiState.value = if (songs.isEmpty()) UiState.Empty else UiState.Success(songs)
+                            }
+                        } else {
+                             _uiState.value = UiState.Error("Invalid Playlist ID")
                         }
                     }
                     else -> {
