@@ -11,7 +11,7 @@ interface SettingsDao {
 
     // ========== QUERIES ==========
 
-    @Query("SELECT * FROM app_settings WHERE id = 1") fun getSettings(): Flow<AppSettingsEntity>
+    @Query("SELECT * FROM app_settings WHERE id = 1") fun getSettings(): Flow<AppSettingsEntity?>
 
     @Query("SELECT * FROM app_settings WHERE id = 1")
     suspend fun getSettingsOnce(): AppSettingsEntity?

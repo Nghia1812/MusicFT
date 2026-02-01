@@ -38,8 +38,8 @@ fun SongDetailOptionModal(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
-        containerColor = SurfaceSlate,
-        dragHandle = { BottomSheetDefaults.DragHandle(color = Color.Gray, width = 40.dp, height = 4.dp) }
+        containerColor = MaterialTheme.colorScheme.surface,
+        dragHandle = { BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.onSurfaceVariant, width = 40.dp, height = 4.dp) }
     ) {
         Column(
             modifier = Modifier
@@ -66,12 +66,12 @@ fun SongDetailOptionModal(
                     Text(
                         text = song.title,
                         style = MaterialTheme.typography.titleLarge,
-                        color = LightText
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = song.artistName,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = GrayText
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -82,31 +82,31 @@ fun SongDetailOptionModal(
             OptionItem(
                 icon = Icons.Default.PlayArrow,
                 text = "Play Next",
-                color = CyberpunkTeal,
+                color = MaterialTheme.colorScheme.primary,
                 onClick = onPlayNext
             )
             OptionItem(
                 icon = Icons.Default.Add,
                 text = "Add to Playlist",
-                color = CyberpunkTeal,
+                color = MaterialTheme.colorScheme.primary,
                 onClick = onAddToPlaylist
             )
             OptionItem(
                 icon = if (song.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                 text = "Add to Favorites",
-                color = CyberpunkTeal,
+                color = MaterialTheme.colorScheme.primary,
                 onClick = onAddToFavorites
             )
             OptionItem(
                 icon = Icons.Default.Share,
                 text = "Share Song",
-                color = CyberpunkTeal,
+                color = MaterialTheme.colorScheme.primary,
                 onClick = onShareSong
             )
             OptionItem(
                 icon = Icons.Default.Star, //TODO: Replace with icons manually
                 text = "Go to Album",
-                color = CyberpunkTeal,
+                color = MaterialTheme.colorScheme.primary,
                 onClick = onGoToAlbum
             )
             
@@ -116,7 +116,7 @@ fun SongDetailOptionModal(
             OptionItem(
                 icon = Icons.Default.Delete,
                 text = "Remove from Library",
-                color = ErrorRed,
+                color = MaterialTheme.colorScheme.error,
                 onClick = onRemoveFromLibrary
             )
         }
@@ -147,7 +147,7 @@ private fun OptionItem(
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge,
-            color = if (color == ErrorRed) ErrorRed else LightText
+            color = if (color == MaterialTheme.colorScheme.error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
         )
     }
 }

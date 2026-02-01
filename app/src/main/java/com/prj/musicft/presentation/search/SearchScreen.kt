@@ -35,9 +35,8 @@ import com.prj.musicft.presentation.common.UiState
 import com.prj.musicft.presentation.home.AddToPlaylistDialog
 import com.prj.musicft.presentation.home.CreatePlaylistDialog
 import com.prj.musicft.presentation.home.SongDetailOptionModal
-import com.prj.musicft.presentation.theme.CyberpunkTeal
-import com.prj.musicft.presentation.theme.DarkBackground
-import com.prj.musicft.presentation.theme.SurfaceSlate
+
+
 
 @Composable
 fun SearchScreen(
@@ -111,7 +110,7 @@ fun SearchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBackground)
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
             .statusBarsPadding()
     ) {
@@ -124,7 +123,7 @@ fun SearchScreen(
             Text(
                 text = "Search",
                 style = MaterialTheme.typography.headlineLarge,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -138,7 +137,7 @@ fun SearchScreen(
             placeholder = {
                 Text(
                     text = "Search songs, artists...",
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyLarge
                 )
             },
@@ -146,7 +145,7 @@ fun SearchScreen(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Search",
-                    tint = Color.Gray
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             trailingIcon = {
@@ -155,7 +154,7 @@ fun SearchScreen(
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Clear",
-                        tint = Color.Gray
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -163,15 +162,15 @@ fun SearchScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(28.dp))
-                .background(SurfaceSlate),
+                .background(MaterialTheme.colorScheme.surface),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = SurfaceSlate,
-                unfocusedContainerColor = SurfaceSlate,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = CyberpunkTeal,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
@@ -185,7 +184,7 @@ fun SearchScreen(
             Text(
                 text = "TOP RESULTS",
                 style = MaterialTheme.typography.labelLarge,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 2.sp
             )
         }
@@ -197,7 +196,7 @@ fun SearchScreen(
             when (val state = uiState) {
                 is UiState.Loading -> {
                     CircularProgressIndicator(
-                        color = CyberpunkTeal, modifier = Modifier.align(Alignment.Center)
+                        color = MaterialTheme.colorScheme.primary, modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
@@ -211,21 +210,21 @@ fun SearchScreen(
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = null,
-                            tint = Color.Gray.copy(alpha = 0.5f),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             modifier = Modifier.size(80.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Play what you love",
                             style = MaterialTheme.typography.headlineSmall,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Search for songs, artists, and playlists",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -240,7 +239,7 @@ fun SearchScreen(
                             modifier = Modifier
                                 .size(120.dp)
                                 .background(
-                                    color = Color.Black.copy(alpha = 0.3f), // Subtle dark circle
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f), // Subtle dark circle
                                     shape = CircleShape
                                 )
                         ) {
@@ -251,20 +250,20 @@ fun SearchScreen(
                                         color = Color.Transparent,
                                         shape = CircleShape
                                     )
-                                    .border(2.dp, CyberpunkTeal, CircleShape),
+                                    .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Search,
                                     contentDescription = null,
-                                    tint = CyberpunkTeal,
+                                    tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(48.dp)
                                 )
                                 // Cross "x" overlay
                                 Icon(
                                     imageVector = Icons.Default.Close,
                                     contentDescription = null,
-                                    tint = CyberpunkTeal,
+                                    tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(24.dp).offset(x = 12.dp, y = 12.dp)
                                 )
                             }
@@ -275,7 +274,7 @@ fun SearchScreen(
                         Text(
                             text = "No results found",
                             style = MaterialTheme.typography.headlineSmall,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold
                         )
                         
@@ -284,7 +283,7 @@ fun SearchScreen(
                         Text(
                             text = "Try searching for something\nelse or explore new genres.",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
                         )
                         
@@ -293,9 +292,9 @@ fun SearchScreen(
                         OutlinedButton(
                             onClick = { viewModel.clearFilters() },
                             colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = CyberpunkTeal
+                                contentColor = MaterialTheme.colorScheme.primary
                             ),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, CyberpunkTeal),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                             shape = RoundedCornerShape(50)
                         ) {
                             Text(

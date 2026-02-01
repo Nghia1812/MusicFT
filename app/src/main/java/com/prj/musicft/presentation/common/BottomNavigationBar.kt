@@ -20,8 +20,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.prj.musicft.presentation.navigation.Screen
-import com.prj.musicft.presentation.theme.CyberpunkTeal
-import com.prj.musicft.presentation.theme.SurfaceSlate
+
 
 sealed class BottomNavItem(
     val route: String,
@@ -77,8 +76,8 @@ fun AppBottomNavigation(navController: NavController, modifier: Modifier = Modif
     // Dark background, no elevation (flat), lighter icons
     NavigationBar(
         modifier = modifier,
-        containerColor = SurfaceSlate,
-        contentColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface,
         tonalElevation = 0.dp
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -115,13 +114,13 @@ fun AppBottomNavigation(navController: NavController, modifier: Modifier = Modif
                 },
                 colors =
                     NavigationBarItemDefaults.colors(
-                        selectedIconColor = CyberpunkTeal,
-                        selectedTextColor = CyberpunkTeal,
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
                         indicatorColor =
-                            SurfaceSlate, // Make indicator invisible (blend with
+                            MaterialTheme.colorScheme.surface, // Make indicator invisible (blend with
                         // background) or slight tint
-                        unselectedIconColor = Color.Gray,
-                        unselectedTextColor = Color.Gray
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
             )
         }

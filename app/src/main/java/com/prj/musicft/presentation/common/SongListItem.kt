@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.prj.musicft.domain.model.Song
-import com.prj.musicft.presentation.theme.CyberpunkMagenta
+
 
 @Composable
 fun SongListItem(
@@ -50,13 +50,13 @@ fun SongListItem(
                 text = song.title,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onBackground,
                 maxLines = 1
             )
             Text(
                 text = song.artistName,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1
             )
         }
@@ -66,7 +66,7 @@ fun SongListItem(
             Icon(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = "Favorite",
-                tint = CyberpunkMagenta,
+                tint = MaterialTheme.colorScheme.tertiary, // Use tertiary for accents like favorite if appropriate, or primary
                 modifier = Modifier.size(24.dp).padding(end = 4.dp)
             )
         }
@@ -76,7 +76,7 @@ fun SongListItem(
             Icon(
                 imageVector = Icons.Default.MoreVert,
                 contentDescription = "More",
-                tint = Color.Gray
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

@@ -38,4 +38,9 @@ class SettingsViewModel @Inject constructor(
             updateThemeModeUseCase(newMode)
         }
     }
+
+    fun onLanguageChange(languageCode: String) {
+        val appLocale = androidx.core.os.LocaleListCompat.forLanguageTags(languageCode)
+        androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(appLocale)
+    }
 }

@@ -42,8 +42,8 @@ fun AddToPlaylistDialog(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
-        containerColor = SurfaceSlate,
-        dragHandle = { BottomSheetDefaults.DragHandle(color = Color.Gray, width = 40.dp, height = 4.dp) }
+        containerColor = MaterialTheme.colorScheme.surface,
+        dragHandle = { BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.onSurfaceVariant, width = 40.dp, height = 4.dp) }
     ) {
         Column(
             modifier = Modifier
@@ -60,19 +60,19 @@ fun AddToPlaylistDialog(
                 Text(
                     text = "Add to Playlist",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
                 IconButton(
                     onClick = onDismissRequest,
                     modifier = Modifier
                         .size(32.dp)
-                        .background(Color.White.copy(alpha = 0.1f), RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f), RoundedCornerShape(16.dp))
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Close",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(16.dp)
                     )
                 }
@@ -83,7 +83,7 @@ fun AddToPlaylistDialog(
             // Song Preview Card
             Card(
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.05f)),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f)),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
@@ -103,21 +103,21 @@ fun AddToPlaylistDialog(
                         Text(
                             text = song.title,
                             style = MaterialTheme.typography.titleMedium,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onSurface,
                             maxLines = 1,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
                             text = "${song.artistName} • ${formatDuration(song.duration)}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1
                         )
                     }
                     Icon(
                         imageVector = Icons.Default.List,
                         contentDescription = null,
-                        tint = CyberpunkTeal
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -135,13 +135,13 @@ fun AddToPlaylistDialog(
                 Box(
                     modifier = Modifier
                         .size(48.dp)
-                        .background(Color.White.copy(alpha = 0.05f), RoundedCornerShape(12.dp)),
+                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f), RoundedCornerShape(12.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = null,
-                        tint = CyberpunkTeal
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
@@ -149,13 +149,13 @@ fun AddToPlaylistDialog(
                     Text(
                         text = "New Playlist",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = "Create a fresh collection",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -165,7 +165,7 @@ fun AddToPlaylistDialog(
             Text(
                 text = "YOUR PLAYLISTS",
                 style = MaterialTheme.typography.labelSmall,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.0.sp
             )
@@ -193,8 +193,8 @@ fun AddToPlaylistDialog(
                 modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CyberpunkTeal,
-                    contentColor = Color.Black
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
                 Text(
@@ -220,14 +220,14 @@ fun PlaylistItem(playlist: Playlist, isAdded: Boolean, onClick: () -> Unit) {
         Box(
              modifier = Modifier
                 .size(48.dp)
-                .background(Color.White.copy(alpha = 0.1f), RoundedCornerShape(12.dp)),
+                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f), RoundedCornerShape(12.dp)),
              contentAlignment = Alignment.Center
         ) {
              Icon(
                  // Use a generic music icon or the first letter
                  imageVector = Icons.Default.AccountCircle, // TODO: Placeholder
                  contentDescription = null,
-                 tint = Color.Gray
+                 tint = MaterialTheme.colorScheme.onSurfaceVariant
              )
         }
         
@@ -237,20 +237,20 @@ fun PlaylistItem(playlist: Playlist, isAdded: Boolean, onClick: () -> Unit) {
             Text(
                 text = playlist.name,
                 style = MaterialTheme.typography.bodyLarge,
-                color = if (isAdded) CyberpunkTeal else Color.White, // Highlight name if added
+                color = if (isAdded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface, // Highlight name if added
                 fontWeight = FontWeight.SemiBold
             )
             Text(
                 text = "${playlist.songCount} tracks",
                 style = MaterialTheme.typography.bodySmall,
-                color = CyberpunkTeal
+                color = MaterialTheme.colorScheme.primary
             )
         }
         
         Icon(
             imageVector = if (isAdded) Icons.Default.Check else Icons.Default.Add,
             contentDescription = null,
-            tint = if (isAdded) CyberpunkTeal else Color.Gray
+            tint = if (isAdded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -279,7 +279,7 @@ fun CreatePlaylistDialog(
     Dialog(onDismissRequest = onDismissRequest) {
         Card(
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = SurfaceSlate),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -288,7 +288,7 @@ fun CreatePlaylistDialog(
                 Text(
                     text = "New Playlist",
                     style = MaterialTheme.typography.titleLarge,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -298,12 +298,12 @@ fun CreatePlaylistDialog(
                     label = { Text("Playlist Name") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                         focusedTextColor = Color.White,
-                         unfocusedTextColor = Color.White,
-                         focusedBorderColor = CyberpunkTeal,
-                         unfocusedBorderColor = Color.Gray,
-                         focusedLabelColor = CyberpunkTeal,
-                         unfocusedLabelColor = Color.Gray
+                         focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                         unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                         focusedBorderColor = MaterialTheme.colorScheme.primary,
+                         unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                         focusedLabelColor = MaterialTheme.colorScheme.primary,
+                         unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -317,7 +317,7 @@ fun CreatePlaylistDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = onDismissRequest) {
-                        Text("Cancel", color = Color.Gray)
+                        Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     Button(
                         onClick = {
@@ -325,10 +325,10 @@ fun CreatePlaylistDialog(
                                 onConfirm(playlistName)
                             }
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = CyberpunkTeal),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         enabled = playlistName.isNotBlank()
                     ) {
-                        Text("Create", color = Color.Black)
+                        Text("Create", color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
             }

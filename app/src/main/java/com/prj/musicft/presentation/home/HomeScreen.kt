@@ -25,9 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.prj.musicft.domain.model.Song
-import com.prj.musicft.presentation.theme.CyberpunkTeal
-import com.prj.musicft.presentation.theme.DarkBackground
-import com.prj.musicft.presentation.theme.SurfaceSlate
 import com.prj.musicft.presentation.common.UiState
 import com.prj.musicft.presentation.common.SongListItem
 import kotlinx.coroutines.launch
@@ -105,7 +102,7 @@ fun HomeScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    Scaffold(topBar = { HomeTopBar() }, containerColor = DarkBackground) { padding ->
+    Scaffold(topBar = { HomeTopBar() }, containerColor = MaterialTheme.colorScheme.background) { padding ->
         when (val state = uiState) {
             is UiState.Loading -> {
                 Box(
@@ -114,7 +111,7 @@ fun HomeScreen(
                         .padding(padding),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = CyberpunkTeal)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
 
@@ -129,14 +126,14 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.Default.Search,
                             contentDescription = null,
-                            tint = Color.Gray,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(64.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "No songs found",
                             style = MaterialTheme.typography.titleMedium,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
@@ -245,7 +242,7 @@ fun HomeTopBar() {
         Text(
             text = "Discovery",
             style = MaterialTheme.typography.headlineLarge,
-            color = Color.White
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
@@ -259,7 +256,7 @@ fun SearchBar(onClick: () -> Unit) {
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .height(50.dp)
                 .clip(RoundedCornerShape(25.dp))
-                .background(SurfaceSlate)
+                .background(MaterialTheme.colorScheme.surface)
                 .clickable { onClick() }
                 .padding(horizontal = 16.dp),
         contentAlignment = Alignment.CenterStart
@@ -268,13 +265,13 @@ fun SearchBar(onClick: () -> Unit) {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search",
-                tint = CyberpunkTeal // Matching design icon color
+                tint = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = "Artists, songs, or lyrics",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -289,12 +286,12 @@ fun SectionHeader(title: String, actionText: String?, onActionClick: (() -> Unit
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = title, style = MaterialTheme.typography.titleLarge, color = Color.White)
+        Text(text = title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onBackground)
         if (actionText != null) {
             Text(
                 text = actionText,
                 style = MaterialTheme.typography.bodyMedium,
-                color = CyberpunkTeal,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable { onActionClick?.invoke() }
             )
         }
@@ -316,13 +313,13 @@ fun RecentlyAddedItem(song: Song) {
         Text(
             text = song.title,
             style = MaterialTheme.typography.titleMedium,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1
         )
         Text(
             text = song.artistName,
             style = MaterialTheme.typography.bodySmall,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1
         )
     }

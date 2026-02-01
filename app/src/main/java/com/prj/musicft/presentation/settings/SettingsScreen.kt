@@ -1,5 +1,6 @@
 package com.prj.musicft.presentation.settings
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,29 +11,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.PrivacyTip
-import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material.icons.filled.Translate
-import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.prj.musicft.presentation.theme.CyberpunkTeal
-import com.prj.musicft.presentation.theme.DarkBackground
-import com.prj.musicft.presentation.theme.GrayText
-import com.prj.musicft.presentation.theme.LightText
-import com.prj.musicft.presentation.theme.SurfaceSlate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,6 +31,48 @@ fun SettingsScreen(
 ) {
     val settingsState by viewModel.settingsState.collectAsState()
     val isDark = settingsState?.themeMode == com.prj.musicft.domain.model.ThemeMode.DARK
+    var showLanguageDialog by remember { mutableStateOf(false) }
+
+    val configuration = LocalConfiguration.current
+    val appLocales = AppCompatDelegate.getApplicationLocales()
+    val isSystemDefault = appLocales.isEmpty
+    
+    // For display, use the configuration (resolved language)
+    val currentLocale = configuration.locales[0]
+    val displayLanguage = remember(currentLocale) {
+        currentLocale.getDisplayName(currentLocale)
+    }
+    
+    // Privacy Policy Dialog State
+    var showPrivacyDialog by remember { mutableStateOf(false) }
+
+    // Version Name
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val versionName = remember {
+        try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            "v${packageInfo.versionName}"
+        } catch (e: Exception) {
+            "Unknown"
+        }
+    }
+
+    if (showLanguageDialog) {
+        LanguageSelectionDialog(
+            currentLanguageCode = if (isSystemDefault) "" else (appLocales[0]?.language ?: "en"),
+            onDismissRequest = { showLanguageDialog = false },
+            onLanguageSelected = { code ->
+                viewModel.onLanguageChange(code)
+                showLanguageDialog = false
+            }
+        )
+    }
+    
+    if (showPrivacyDialog) {
+        PrivacyPolicyDialog(
+            onDismissRequest = { showPrivacyDialog = false }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -50,25 +81,16 @@ fun SettingsScreen(
                     Text(
                         text = "Settings",
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold
                     )
                 },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = DarkBackground
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
-        containerColor = DarkBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -82,7 +104,7 @@ fun SettingsScreen(
             SettingsSection(title = "GENERAL") {
                 SettingsGroup {
                     SettingsItem(
-                        icon = Icons.Default.DarkMode,
+                        icon = Icons.Default.Info, //TODO: Add icons
                         title = "Theme",
                         subtitle = if (isDark) "Dark Mode" else "Light Mode",
                         trailingContent = {
@@ -93,10 +115,11 @@ fun SettingsScreen(
                         }
                     )
                     SettingsItem(
-                        icon = Icons.Default.Translate,
+                        icon = Icons.Default.Info, //TODO: Add icons
                         title = "Language",
-                        subtitle = "English (US)",
-                        showChevron = true
+                        subtitle = displayLanguage, // Display current language name
+                        showChevron = true,
+                        onClick = { showLanguageDialog = true }
                     )
                 }
             }
@@ -105,13 +128,13 @@ fun SettingsScreen(
             SettingsSection(title = "AUDIO") {
                 SettingsGroup {
                     SettingsItem(
-                        icon = Icons.Default.Tune,
+                        icon = Icons.Default.Info, //TODO: Add icons
                         title = "Equalizer",
                         subtitle = "Custom preset active",
                         showChevron = true
                     )
                     SettingsItem(
-                        icon = Icons.Default.Shuffle,
+                        icon = Icons.Default.Info, //TODO: Add icons
                         title = "Crossfade",
                         subtitle = "5 seconds overlap",
                         trailingContent = {
@@ -119,22 +142,22 @@ fun SettingsScreen(
                                 checked = true,
                                 onCheckedChange = { },
                                 colors = SwitchDefaults.colors(
-                                    checkedThumbColor = Color.White,
-                                    checkedTrackColor = CyberpunkTeal,
-                                    uncheckedThumbColor = Color.Gray,
-                                    uncheckedTrackColor = SurfaceSlate
+                                    checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                                    checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                    uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
                                 )
                             )
                         }
                     )
                     SettingsItem(
-                        icon = Icons.Default.GraphicEq,
+                        icon = Icons.Default.Info, //TODO: Add icons
                         title = "Audio Quality",
                         subtitle = "Lossless (High)",
                         trailingContent = {
                             Badge(
-                                containerColor = CyberpunkTeal.copy(alpha = 0.2f),
-                                contentColor = CyberpunkTeal
+                                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                                contentColor = MaterialTheme.colorScheme.primary
                             ) {
                                 Text(
                                     text = "FLAC",
@@ -152,9 +175,10 @@ fun SettingsScreen(
             SettingsSection(title = "ABOUT") {
                 SettingsGroup {
                     SettingsItem(
-                        icon = Icons.Default.PrivacyTip,
+                        icon = Icons.Default.Info, //TODO: Add icons
                         title = "Privacy Policy",
-                        showChevron = true
+                        showChevron = true,
+                        onClick = { showPrivacyDialog = true }
                     )
                     SettingsItem(
                         icon = Icons.Default.Info,
@@ -162,9 +186,9 @@ fun SettingsScreen(
                         subtitle = "Built for audiophiles",
                         trailingContent = {
                             Text(
-                                text = "v2.4.0",
+                                text = versionName,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = GrayText
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     )
@@ -185,7 +209,7 @@ fun SettingsSection(
         Text(
             text = title,
             style = MaterialTheme.typography.labelMedium,
-            color = CyberpunkTeal,
+            color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
         )
@@ -201,7 +225,7 @@ fun SettingsGroup(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
-            .background(SurfaceSlate)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(vertical = 8.dp)
     ) {
         content()
@@ -229,13 +253,13 @@ fun SettingsItem(
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .background(Color.White.copy(alpha = 0.05f)),
+                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = CyberpunkTeal,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -247,26 +271,30 @@ fun SettingsItem(
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold
             )
             if (subtitle != null) {
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = GrayText
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
 
-        // Trailing
+        Spacer(modifier = Modifier.width(8.dp))
+
+        // Trailing - wrap in Box with wrapContentWidth to prevent expansion
         if (trailingContent != null) {
-            trailingContent()
+            Box(modifier = Modifier.wrapContentWidth()) {
+                trailingContent()
+            }
         } else if (showChevron) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = GrayText
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -279,9 +307,10 @@ fun ThemeSwitcher(
 ) {
     Row(
         modifier = Modifier
+            .width(120.dp)
             .height(32.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.Black.copy(alpha = 0.3f))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
             .padding(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -295,7 +324,7 @@ fun ThemeSwitcher(
                 .clickable { onThemeChange(true) }
                 .then(
                     if (isDark) Modifier
-                        .background(SurfaceSlate) // Active
+                        .background(MaterialTheme.colorScheme.surface) // Active
                     else Modifier
                 ),
             contentAlignment = Alignment.Center
@@ -303,7 +332,7 @@ fun ThemeSwitcher(
             Text(
                 text = "Dark",
                 style = MaterialTheme.typography.labelSmall,
-                color = if (isDark) Color.White else GrayText
+                color = if (isDark) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         
@@ -317,7 +346,7 @@ fun ThemeSwitcher(
                 .clickable { onThemeChange(false) }
                 .then(
                     if (!isDark) Modifier
-                        .background(SurfaceSlate) // Active
+                        .background(MaterialTheme.colorScheme.surface) // Active
                     else Modifier
                 ),
             contentAlignment = Alignment.Center
@@ -325,8 +354,90 @@ fun ThemeSwitcher(
             Text(
                 text = "Light",
                 style = MaterialTheme.typography.labelSmall,
-                color = if (!isDark) Color.White else GrayText
+                color = if (!isDark) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
+}
+
+@Composable
+fun LanguageSelectionDialog(
+    currentLanguageCode: String,
+    onDismissRequest: () -> Unit,
+    onLanguageSelected: (String) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text(text = "Select Language") },
+        text = {
+            Column {
+                val languages = listOf(
+                    "System Default" to "",
+                    "English" to "en",
+                    "Vietnamese" to "vi",
+                    "Spanish" to "es",
+                    "French" to "fr"
+                )
+                languages.forEach { (name, code) ->
+                    val isSelected = if (code.isEmpty()) {
+                        currentLanguageCode.isEmpty()
+                    } else {
+                        currentLanguageCode == code
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onLanguageSelected(code) }
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = isSelected,
+                            onClick = null // Handled by Row clickable
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = name, style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+@Composable
+fun PrivacyPolicyDialog(
+    onDismissRequest: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(text = "Privacy Policy")
+        },
+        text = {
+            Column(
+                 modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    text = "Your privacy is important to us. This application does not collect or share any personal data.\n\n" +
+                            "1. Local Music Access: We only access your device's storage to play music files locally.\n" +
+                            "2. No Cloud Sync: All data remains on your device.\n" +
+                            "3. Permissions: We only request necessary permissions for audio playback and notification controls.\n\n" +
+                            "If you have any questions, please contact support.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text("Close")
+            }
+        }
+    )
 }

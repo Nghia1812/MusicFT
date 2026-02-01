@@ -22,10 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.prj.musicft.domain.model.RepeatMode
 import com.prj.musicft.domain.model.Song
-import com.prj.musicft.presentation.theme.CyberpunkMagenta
-import com.prj.musicft.presentation.theme.CyberpunkTeal
-import com.prj.musicft.presentation.theme.DarkBackground
-import com.prj.musicft.presentation.theme.SurfaceSlate
+
 import com.prj.musicft.presentation.common.UiState
 
 @Composable
@@ -38,22 +35,22 @@ fun FullPlayerScreen(
     when (val state = uiState) {
         is UiState.Loading -> {
             Box(
-                modifier = Modifier.fillMaxSize().background(DarkBackground),
+                modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = CyberpunkTeal)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
         }
         is UiState.Empty -> {
             Box(
-                modifier = Modifier.fillMaxSize().background(DarkBackground),
+                modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                          text = "No song playing",
                          style = MaterialTheme.typography.titleMedium,
-                         color = Color.White
+                         color = MaterialTheme.colorScheme.onBackground
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = onCollapse) {
@@ -64,7 +61,7 @@ fun FullPlayerScreen(
         }
         is UiState.Error -> {
             Box(
-                modifier = Modifier.fillMaxSize().background(DarkBackground),
+                modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -90,10 +87,10 @@ fun FullPlayerScreen(
             } else {
                 // Fallback should not happen based on ViewModel logic
                  Box(
-                    modifier = Modifier.fillMaxSize().background(DarkBackground),
+                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = CyberpunkTeal)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                 }
             }
         }
@@ -114,7 +111,7 @@ fun FullPlayerContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBackground)
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -128,21 +125,21 @@ fun FullPlayerContent(
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
                     contentDescription = "Collapse",
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
             
             Text(
                 text = "Now Playing",
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.White
+                color = MaterialTheme.colorScheme.onBackground
             )
             
             IconButton(onClick = { /* More Options */ }) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = "More",
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
@@ -177,13 +174,13 @@ fun FullPlayerContent(
                     text = song.title,
                     style = MaterialTheme.typography.headlineSmall, // H5 equivalent nearby
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1
                 )
                 Text(
                     text = song.artistName,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = CyberpunkTeal, // Artist gets accent color
+                    color = MaterialTheme.colorScheme.primary, // Artist gets accent color
                     maxLines = 1
                 )
             }
@@ -192,7 +189,7 @@ fun FullPlayerContent(
                 Icon(
                     imageVector = if (state.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Favorite",
-                    tint = if (state.isFavorite) CyberpunkMagenta else Color.Gray
+                    tint = if (state.isFavorite) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -206,9 +203,9 @@ fun FullPlayerContent(
                 onValueChange = { viewModel.onSeek(it.toLong()) },
                 valueRange = 0f..state.duration.toFloat().coerceAtLeast(1f),
                 colors = SliderDefaults.colors(
-                    thumbColor = CyberpunkTeal,
-                    activeTrackColor = CyberpunkTeal,
-                    inactiveTrackColor = SurfaceSlate
+                    thumbColor = MaterialTheme.colorScheme.primary,
+                    activeTrackColor = MaterialTheme.colorScheme.primary,
+                    inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             )
             
@@ -219,12 +216,12 @@ fun FullPlayerContent(
                 Text(
                     text = formatDuration(state.currentPosition),
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = formatDuration(state.duration),
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -242,7 +239,7 @@ fun FullPlayerContent(
                 Icon(
                     imageVector = Icons.Default.PlayArrow, //TODO: Add icon manually
                     contentDescription = "Shuffle",
-                    tint = if (state.isShuffleEnabled) CyberpunkTeal else Color.Gray
+                    tint = if (state.isShuffleEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             
@@ -254,7 +251,7 @@ fun FullPlayerContent(
                 Icon(
                     imageVector = Icons.Default.PlayArrow, //TODO: Add icon manually
                     contentDescription = "Previous",
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(32.dp)
                 )
             }
@@ -264,13 +261,13 @@ fun FullPlayerContent(
                 onClick = viewModel::onPlayPauseClick,
                 modifier = Modifier.size(72.dp),
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = CyberpunkTeal
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(
                     imageVector = if (state.isPlaying) Icons.Default.PlayArrow else Icons.Default.PlayArrow, //TODO: Add icon manually
                     contentDescription = if (state.isPlaying) "Pause" else "Play",
-                    tint = Color.Black,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(40.dp)
                 )
             }
@@ -283,7 +280,7 @@ fun FullPlayerContent(
                 Icon(
                     imageVector = Icons.Default.PlayArrow, //TODO: Add icon manually
                     contentDescription = "Next",
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(32.dp)
                 )
             }
@@ -294,7 +291,7 @@ fun FullPlayerContent(
                      RepeatMode.ONE -> Icons.Default.PlayArrow //TODO: Add icon manually
                      else -> Icons.Default.PlayArrow //TODO: Add icon manually
                  }
-                 val tint = if (state.repeatMode == RepeatMode.OFF) Color.Gray else CyberpunkTeal
+                 val tint = if (state.repeatMode == RepeatMode.OFF) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary
                  
                 Icon(
                     imageVector = icon,

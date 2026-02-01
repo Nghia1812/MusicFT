@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.prj.musicft.presentation.theme.CyberpunkTeal
+
 
 @Composable
 fun MiniPlayer(
@@ -44,7 +44,7 @@ fun MiniPlayer(
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2A2E35)
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -74,14 +74,14 @@ fun MiniPlayer(
                     Text(
                         text = song.title,
                         style = MaterialTheme.typography.labelMedium,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = song.artistName,
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -92,15 +92,15 @@ fun MiniPlayer(
                     Icon(
                         imageVector = Icons.Default.PlayArrow, //TODO: Later add image vector manually
                         contentDescription = "Previous",
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
                 FilledIconButton(
                     onClick = viewModel::onPlayPauseClick,
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = CyberpunkTeal,
-                        contentColor = Color.Black
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     modifier = Modifier.size(40.dp)
                 ) {
@@ -115,7 +115,7 @@ fun MiniPlayer(
                     Icon(
                         imageVector = Icons.Default.PlayArrow, //TODO: Later add image vector manually
                         contentDescription = "Next",
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -127,7 +127,7 @@ fun MiniPlayer(
                     .fillMaxWidth()
                     .height(2.dp)
                     .align(Alignment.BottomCenter),
-                color = CyberpunkTeal,
+                color = MaterialTheme.colorScheme.primary,
                 trackColor = Color.Transparent
             )
         }

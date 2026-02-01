@@ -10,7 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.List
+
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -28,9 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.prj.musicft.domain.model.Song
 import com.prj.musicft.presentation.common.SongListItem
 import com.prj.musicft.presentation.common.UiState
-import com.prj.musicft.presentation.theme.CyberpunkTeal
-import com.prj.musicft.presentation.theme.DarkBackground
-import com.prj.musicft.presentation.theme.SurfaceSlate
+
 
 enum class CollectionType {
     Favorites, Playlists, Albums, Artists, History
@@ -46,14 +44,14 @@ fun LibraryScreen(
 
     Scaffold(
         topBar = { LibraryTopBar() },
-        containerColor = DarkBackground
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             when (val state = uiState) {
                 is UiState.Loading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
-                        color = CyberpunkTeal
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
                 is UiState.Error -> {
@@ -98,8 +96,8 @@ fun LibraryContent(
                         title = "Favorites",
                         count = "${data.favoriteCount} Tracks",
                         icon = Icons.Default.Favorite,
-                        iconTint = CyberpunkTeal,
-                        iconBgColor = CyberpunkTeal.copy(alpha = 0.2f),
+                        iconTint = MaterialTheme.colorScheme.primary,
+                        iconBgColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                         modifier = Modifier.weight(1f),
                         onClick = { onNavigateToCollection(CollectionType.Favorites) }
                     )
@@ -115,7 +113,7 @@ fun LibraryContent(
                     LibraryCard(
                         title = "Albums",
                         count = "${data.albumCount} Saved",
-                        icon = Icons.Default.List, //TODO: Add icons
+                        icon = Icons.AutoMirrored.Filled.List, //TODO: Add icons
                         modifier = Modifier.weight(1f),
                         onClick = { onNavigateToCollection(CollectionType.Albums) }
                     )
@@ -164,19 +162,19 @@ fun LibraryTopBar() {
             text = "Library",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = MaterialTheme.colorScheme.onBackground
         )
         IconButton(
             onClick = { /* TODO: Search */ },
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(SurfaceSlate)
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search",
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -188,8 +186,8 @@ fun LibraryCard(
     count: String,
     icon: ImageVector,
     modifier: Modifier = Modifier,
-    iconTint: Color = Color.Gray,
-    iconBgColor: Color = Color.DarkGray.copy(alpha = 0.3f),
+    iconTint: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+    iconBgColor: Color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
     onClick: () -> Unit
 ) {
     Card(
@@ -197,7 +195,7 @@ fun LibraryCard(
             .height(160.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceSlate)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier
@@ -226,13 +224,13 @@ fun LibraryCard(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = count,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -248,12 +246,12 @@ fun LibrarySectionHeader(title: String, actionText: String?, onActionClick: (() 
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = title, style = MaterialTheme.typography.titleLarge, color = Color.White)
+        Text(text = title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onBackground)
         if (actionText != null) {
             Text(
                 text = actionText,
                 style = MaterialTheme.typography.bodyMedium,
-                color = CyberpunkTeal,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable { onActionClick?.invoke() }
             )
         }

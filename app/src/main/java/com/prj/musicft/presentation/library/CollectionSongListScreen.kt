@@ -30,11 +30,7 @@ import com.prj.musicft.presentation.common.UiState
 import com.prj.musicft.presentation.home.AddToPlaylistDialog
 import com.prj.musicft.presentation.home.CreatePlaylistDialog
 import com.prj.musicft.presentation.home.SongDetailOptionModal
-import com.prj.musicft.presentation.theme.CyberpunkTeal
-import com.prj.musicft.presentation.theme.DarkBackground
-import com.prj.musicft.presentation.theme.NeonGradientEnd
-import com.prj.musicft.presentation.theme.NeonGradientStart
-import com.prj.musicft.presentation.theme.SurfaceSlate
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -116,28 +112,28 @@ fun CollectionSongListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Collection", color = Color.White) }, // Ideally dynamic title
+                title = { Text("Collection", color = MaterialTheme.colorScheme.onBackground) }, // Ideally dynamic title
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBackground)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         },
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             if (uiState is UiState.Success) {
                 FloatingActionButton(
                     onClick = { viewModel.onPlayAll() },
-                    containerColor = CyberpunkTeal,
+                    containerColor = MaterialTheme.colorScheme.primary,
                     shape = CircleShape
                 ) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = "Play All", tint = Color.White)
+                    Icon(Icons.Default.PlayArrow, contentDescription = "Play All", tint = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }
@@ -151,7 +147,7 @@ fun CollectionSongListScreen(
                 is UiState.Loading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
-                        color = CyberpunkTeal
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
                 is UiState.Error -> {
@@ -164,7 +160,7 @@ fun CollectionSongListScreen(
                 is UiState.Empty -> {
                     Text(
                         text = "No songs found in this collection.",
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -182,8 +178,8 @@ fun CollectionSongListScreen(
                                     .background(
                                         brush = Brush.verticalGradient(
                                             colors = listOf(
-                                                NeonGradientStart.copy(alpha = 0.3f),
-                                                DarkBackground
+                                                MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f),
+                                                MaterialTheme.colorScheme.background
                                             )
                                         )
                                     ),
@@ -192,7 +188,7 @@ fun CollectionSongListScreen(
                                 Text(
                                     text = "${state.data.size} Songs",
                                     style = MaterialTheme.typography.titleMedium,
-                                    color = Color.White.copy(alpha = 0.7f),
+                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                                     modifier = Modifier.padding(16.dp)
                                 )
                             }
