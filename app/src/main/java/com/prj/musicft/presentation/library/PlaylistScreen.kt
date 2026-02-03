@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.prj.musicft.R
+import androidx.compose.ui.res.stringResource
 import com.prj.musicft.domain.model.Playlist
 import com.prj.musicft.presentation.home.CreatePlaylistDialog
 import com.prj.musicft.presentation.theme.CyberpunkTeal
@@ -42,7 +43,7 @@ fun PlaylistScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Playlists",
+                        text = stringResource(R.string.playlists),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         color = Color.White
                     )
@@ -51,7 +52,7 @@ fun PlaylistScreen(
                     IconButton(onClick = onNavigateUp) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White
                         )
                     }
@@ -70,7 +71,7 @@ fun PlaylistScreen(
         ) {
             if (playlists.isEmpty()) {
                 Text(
-                    text = "No playlists found.\nCreate one to get started!",
+                    text = stringResource(R.string.no_playlists_found),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.align(Alignment.Center),
@@ -132,7 +133,7 @@ fun PlaylistListItem(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "${playlist.songCount} Songs",
+                text = stringResource(R.string.songs_count, playlist.songCount),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

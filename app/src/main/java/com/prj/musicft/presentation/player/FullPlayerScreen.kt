@@ -25,6 +25,8 @@ import com.prj.musicft.domain.model.RepeatMode
 import com.prj.musicft.domain.model.Song
 import androidx.compose.ui.res.vectorResource
 import com.prj.musicft.R
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Brush
 
 import com.prj.musicft.presentation.common.UiState
 
@@ -38,7 +40,14 @@ fun FullPlayerScreen(
     when (val state = uiState) {
         is UiState.Loading -> {
             Box(
-                modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+                modifier = Modifier.fillMaxSize().background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f),
+                            MaterialTheme.colorScheme.background
+                        )
+                    )
+                ),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -46,25 +55,39 @@ fun FullPlayerScreen(
         }
         is UiState.Empty -> {
             Box(
-                modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+                modifier = Modifier.fillMaxSize().background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f),
+                            MaterialTheme.colorScheme.background
+                        )
+                    )
+                ),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                         text = "No song playing",
+                         text = stringResource(R.string.no_song_playing),
                          style = MaterialTheme.typography.titleMedium,
                          color = MaterialTheme.colorScheme.onBackground
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = onCollapse) {
-                         Text("Back")
+                         Text(stringResource(R.string.back))
                     }
                 }
             }
         }
         is UiState.Error -> {
             Box(
-                modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+                modifier = Modifier.fillMaxSize().background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f),
+                            MaterialTheme.colorScheme.background
+                        )
+                    )
+                ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -90,7 +113,14 @@ fun FullPlayerScreen(
             } else {
                 // Fallback should not happen based on ViewModel logic
                  Box(
-                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
+                    modifier = Modifier.fillMaxSize().background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f),
+                                MaterialTheme.colorScheme.background
+                            )
+                        )
+                    ),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
@@ -114,7 +144,14 @@ fun FullPlayerContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f),
+                        MaterialTheme.colorScheme.background
+                    )
+                )
+            )
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -127,13 +164,13 @@ fun FullPlayerContent(
             IconButton(onClick = onCollapse) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Collapse",
+                    contentDescription = stringResource(R.string.collapse),
                     tint = MaterialTheme.colorScheme.onBackground
                 )
             }
             
             Text(
-                text = "Now Playing",
+                text = stringResource(R.string.now_playing),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -141,7 +178,7 @@ fun FullPlayerContent(
             IconButton(onClick = { /* More Options */ }) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
-                    contentDescription = "More",
+                    contentDescription = stringResource(R.string.more),
                     tint = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -191,7 +228,7 @@ fun FullPlayerContent(
             IconButton(onClick = viewModel::onFavoriteClick) {
                 Icon(
                     imageVector = if (state.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = "Favorite",
+                    contentDescription = stringResource(R.string.favorite),
                     tint = if (state.isFavorite) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -241,7 +278,7 @@ fun FullPlayerContent(
             IconButton(onClick = viewModel::onShuffleClick) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_shuffle),
-                    contentDescription = "Shuffle",
+                    contentDescription = stringResource(R.string.shuffle),
                     tint = if (state.isShuffleEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -253,7 +290,7 @@ fun FullPlayerContent(
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_previous),
-                    contentDescription = "Previous",
+                    contentDescription = stringResource(R.string.previous),
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(32.dp)
                 )
@@ -269,7 +306,7 @@ fun FullPlayerContent(
             ) {
                 Icon(
                     imageVector = if (state.isPlaying) ImageVector.vectorResource(R.drawable.ic_pause) else Icons.Default.PlayArrow,
-                    contentDescription = if (state.isPlaying) "Pause" else "Play",
+                    contentDescription = if (state.isPlaying) stringResource(R.string.pause) else stringResource(R.string.play),
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(40.dp)
                 )
@@ -282,7 +319,7 @@ fun FullPlayerContent(
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_next),
-                    contentDescription = "Next",
+                    contentDescription = stringResource(R.string.next),
                     tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(32.dp)
                 )
@@ -298,7 +335,7 @@ fun FullPlayerContent(
                  
                 Icon(
                     imageVector = icon,
-                    contentDescription = "Repeat",
+                    contentDescription = stringResource(R.string.repeat),
                     tint = tint
                 )
             }

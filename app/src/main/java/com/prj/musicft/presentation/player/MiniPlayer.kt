@@ -19,9 +19,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.prj.musicft.R
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 
 
 @Composable
@@ -94,7 +95,7 @@ fun MiniPlayer(
                 IconButton(onClick = viewModel::onSkipPrevious) {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_previous),
-                        contentDescription = "Previous",
+                        contentDescription = stringResource(R.string.previous),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -110,14 +111,14 @@ fun MiniPlayer(
                     Icon(
                         imageVector = if (isPlaying) ImageVector.vectorResource(R.drawable.ic_pause)
                         else Icons.Default.PlayArrow,
-                        contentDescription = if (isPlaying) "Pause" else "Play"
+                        contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play)
                     )
                 }
                 
                 IconButton(onClick = viewModel::onSkipNext) {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_next),
-                        contentDescription = "Next",
+                        contentDescription = stringResource(R.string.next),
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }

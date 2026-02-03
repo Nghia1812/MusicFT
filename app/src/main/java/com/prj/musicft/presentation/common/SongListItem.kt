@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.prj.musicft.domain.model.Song
+import com.prj.musicft.R
+import androidx.compose.ui.res.stringResource
 
 
 @Composable
@@ -65,7 +67,7 @@ fun SongListItem(
         if (song.isFavorite) {
             Icon(
                 imageVector = Icons.Default.Favorite,
-                contentDescription = "Favorite",
+                contentDescription = stringResource(R.string.favorite),
                 tint = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier
                     .size(24.dp)
@@ -77,7 +79,7 @@ fun SongListItem(
         IconButton(onClick = onOptionClick) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = "More",
+                contentDescription = stringResource(R.string.more),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

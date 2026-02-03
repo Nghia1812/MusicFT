@@ -30,6 +30,7 @@ import com.prj.musicft.domain.model.Song
 import com.prj.musicft.presentation.theme.CyberpunkTeal
 import com.prj.musicft.presentation.theme.SurfaceSlate
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import com.prj.musicft.R
 
@@ -61,7 +62,7 @@ fun AddToPlaylistDialog(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Add to Playlist",
+                    text = stringResource(R.string.add_to_playlist),
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
@@ -74,7 +75,7 @@ fun AddToPlaylistDialog(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
+                        contentDescription = stringResource(R.string.close),
                         tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(16.dp)
                     )
@@ -150,13 +151,13 @@ fun AddToPlaylistDialog(
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text(
-                        text = "New Playlist",
+                        text = stringResource(R.string.new_playlist),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text = "Create a fresh collection",
+                        text = stringResource(R.string.create_fresh_collection),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -166,7 +167,7 @@ fun AddToPlaylistDialog(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "YOUR PLAYLISTS",
+                text = stringResource(R.string.your_playlists),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Bold,
@@ -201,7 +202,7 @@ fun AddToPlaylistDialog(
                 )
             ) {
                 Text(
-                    text = "Create New Playlist",
+                    text = stringResource(R.string.create_new_playlist),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -244,7 +245,7 @@ fun PlaylistItem(playlist: Playlist, isAdded: Boolean, onClick: () -> Unit) {
                 fontWeight = FontWeight.SemiBold
             )
             Text(
-                text = "${playlist.songCount} tracks",
+                text = stringResource(R.string.playlist_tracks_count, playlist.songCount),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -289,7 +290,7 @@ fun CreatePlaylistDialog(
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(
-                    text = "New Playlist",
+                    text = stringResource(R.string.new_playlist),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -298,7 +299,7 @@ fun CreatePlaylistDialog(
                 OutlinedTextField(
                     value = playlistName,
                     onValueChange = { playlistName = it },
-                    label = { Text("Playlist Name") },
+                    label = { Text(stringResource(R.string.playlist_name)) },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
                          focusedTextColor = MaterialTheme.colorScheme.onSurface,
@@ -320,7 +321,7 @@ fun CreatePlaylistDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = onDismissRequest) {
-                        Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(stringResource(R.string.cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     Button(
                         onClick = {
@@ -331,7 +332,7 @@ fun CreatePlaylistDialog(
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         enabled = playlistName.isNotBlank()
                     ) {
-                        Text("Create", color = MaterialTheme.colorScheme.onPrimary)
+                        Text(stringResource(R.string.create), color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
             }

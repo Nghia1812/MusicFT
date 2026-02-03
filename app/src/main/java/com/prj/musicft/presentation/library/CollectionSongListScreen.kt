@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.prj.musicft.R
+import androidx.compose.ui.res.stringResource
 import com.prj.musicft.domain.model.Song
 import com.prj.musicft.presentation.common.SongListItem
 import com.prj.musicft.presentation.common.UiState
@@ -134,7 +135,7 @@ fun CollectionSongListScreen(
                     IconButton(onClick = onNavigateUp) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White
                         )
                     }
@@ -167,7 +168,7 @@ fun CollectionSongListScreen(
                 }
                 is UiState.Empty -> {
                     Text(
-                        text = "No songs found in this collection.",
+                        text = stringResource(R.string.no_songs_collection),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -185,7 +186,7 @@ fun CollectionSongListScreen(
                                     .padding(horizontal = 16.dp, vertical = 24.dp)
                             ) {
                                 Text(
-                                    text = "YOUR COLLECTION",
+                                    text = stringResource(R.string.your_collection),
                                     style = MaterialTheme.typography.labelMedium.copy(
                                         fontWeight = FontWeight.Bold,
                                         letterSpacing = 1.2.sp
@@ -194,7 +195,7 @@ fun CollectionSongListScreen(
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = "${state.data.size} Tracks",
+                                    text = stringResource(R.string.tracks_count, state.data.size),
                                     style = MaterialTheme.typography.headlineLarge.copy(
                                         fontWeight = FontWeight.Bold
                                     ),
@@ -223,13 +224,13 @@ fun CollectionSongListScreen(
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
-                                            text = "Play All",
+                                            text = stringResource(R.string.play_all),
                                             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
                                         )
                                     }
 
                                     OutlinedButton(
-                                        onClick = { /* TODO: Shuffle Logic */ viewModel.onPlayAll() }, // Assuming Shuffle is play all for now or check viewModel
+                                        onClick = { viewModel.onShuffle() },
                                         colors = ButtonDefaults.outlinedButtonColors(
                                             contentColor = Color.White
                                         ),
@@ -247,7 +248,7 @@ fun CollectionSongListScreen(
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
-                                            text = "Shuffle",
+                                            text = stringResource(R.string.shuffle),
                                             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
                                         )
                                     }

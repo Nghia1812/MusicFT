@@ -25,6 +25,7 @@ import androidx.compose.ui.res.vectorResource
 import com.prj.musicft.R
 import com.prj.musicft.domain.model.Song
 import com.prj.musicft.presentation.theme.*
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,31 +84,31 @@ fun SongDetailOptionModal(
             // Actions
             OptionItem(
                 icon = Icons.Default.PlayArrow,
-                text = "Play Next",
+                text = stringResource(R.string.play_next),
                 color = MaterialTheme.colorScheme.primary,
                 onClick = onPlayNext
             )
             OptionItem(
                 icon = Icons.Default.Add,
-                text = "Add to Playlist",
+                text = stringResource(R.string.add_to_playlist),
                 color = MaterialTheme.colorScheme.primary,
                 onClick = onAddToPlaylist
             )
             OptionItem(
                 icon = if (song.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                text = "Add to Favorites",
+                text = stringResource(R.string.add_to_favorites),
                 color = MaterialTheme.colorScheme.primary,
                 onClick = onAddToFavorites
             )
             OptionItem(
                 icon = Icons.Default.Share,
-                text = "Share Song",
+                text = stringResource(R.string.share_song),
                 color = MaterialTheme.colorScheme.primary,
                 onClick = onShareSong
             )
             OptionItem(
                 icon = ImageVector.vectorResource(R.drawable.ic_album),
-                text = "Go to Album",
+                text = stringResource(R.string.go_to_album),
                 color = MaterialTheme.colorScheme.primary,
                 onClick = onGoToAlbum
             )
@@ -117,7 +118,7 @@ fun SongDetailOptionModal(
             
             OptionItem(
                 icon = Icons.Default.Delete,
-                text = "Remove from Library",
+                text = stringResource(R.string.remove_from_library),
                 color = MaterialTheme.colorScheme.error,
                 onClick = onRemoveFromLibrary
             )

@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.res.vectorResource
 import com.prj.musicft.R
+import androidx.compose.ui.res.stringResource
 import com.prj.musicft.domain.model.Song
 import com.prj.musicft.presentation.common.SongListItem
 import com.prj.musicft.presentation.common.UiState
@@ -95,8 +96,8 @@ fun LibraryContent(
             ) {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     LibraryCard(
-                        title = "Favorites",
-                        count = "${data.favoriteCount} Tracks",
+                        title = stringResource(R.string.favorites),
+                        count = stringResource(R.string.tracks_count, data.favoriteCount),
                         icon = Icons.Default.Favorite,
                         iconTint = MaterialTheme.colorScheme.primary,
                         iconBgColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
@@ -104,8 +105,8 @@ fun LibraryContent(
                         onClick = { onNavigateToCollection(CollectionType.Favorites) }
                     )
                     LibraryCard(
-                        title = "Playlists",
-                        count = "${data.playlistCount} Created",
+                        title = stringResource(R.string.playlists),
+                        count = stringResource(R.string.playlists_created_count, data.playlistCount),
                         icon = Icons.AutoMirrored.Filled.List,
                         modifier = Modifier.weight(1f),
                         onClick = { onNavigateToCollection(CollectionType.Playlists) }
@@ -113,15 +114,15 @@ fun LibraryContent(
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     LibraryCard(
-                        title = "Albums",
-                        count = "${data.albumCount} Saved",
+                        title = stringResource(R.string.albums),
+                        count = stringResource(R.string.albums_saved_count, data.albumCount),
                         icon = ImageVector.vectorResource(R.drawable.ic_album),
                         modifier = Modifier.weight(1f),
                         onClick = { onNavigateToCollection(CollectionType.Albums) }
                     )
                     LibraryCard(
-                        title = "Artists",
-                        count = "${data.artistCount} Following",
+                        title = stringResource(R.string.artists),
+                        count = stringResource(R.string.artists_following_count, data.artistCount),
                         icon = Icons.Default.Person,
                         modifier = Modifier.weight(1f),
                         onClick = { onNavigateToCollection(CollectionType.Artists) }
@@ -134,8 +135,8 @@ fun LibraryContent(
         // Recently Played Header
         item {
             LibrarySectionHeader(
-                title = "Recently Played",
-                actionText = "See All",
+                title = stringResource(R.string.recently_played),
+                actionText = stringResource(R.string.see_all),
                 onActionClick = { onNavigateToCollection(CollectionType.History) }
             )
         }
@@ -161,7 +162,7 @@ fun LibraryTopBar() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "Library",
+            text = stringResource(R.string.library),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground

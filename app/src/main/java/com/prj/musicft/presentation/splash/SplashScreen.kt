@@ -3,40 +3,59 @@ package com.prj.musicft.presentation.splash
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.compose.foundation.border
-import androidx.compose.material.icons.Icons
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import com.prj.musicft.R
 import com.prj.musicft.data.repository.FullSyncRepository
-import com.prj.musicft.presentation.theme.*
-
+import com.prj.musicft.presentation.theme.DarkBorder
+import com.prj.musicft.presentation.theme.DarkSurface
+import com.prj.musicft.presentation.theme.DarkTrack
+import com.prj.musicft.presentation.theme.DeepDarkBackground
+import com.prj.musicft.presentation.theme.SlateGrey
+import com.prj.musicft.presentation.theme.SonusTeal
+import com.prj.musicft.presentation.theme.TealGlow
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(private val syncRepository: FullSyncRepository) :
@@ -163,7 +182,7 @@ fun SplashScreen(
                  // Using the requested icon
                  Icon(
                      painter = androidx.compose.ui.res.painterResource(id = com.prj.musicft.R.drawable.ic_app_launcher),
-                     contentDescription = "Logo",
+                     contentDescription = stringResource(R.string.logo),
                      tint = Color.Unspecified,
                      modifier = Modifier.size(64.dp)
                  )
@@ -173,7 +192,7 @@ fun SplashScreen(
 
             // Title
             Text(
-                text = "SONUS",
+                text = stringResource(R.string.app_branding_name),
                 style = MaterialTheme.typography.displayMedium.copy(
                     fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                     letterSpacing = 2.sp
@@ -193,7 +212,7 @@ fun SplashScreen(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "THE FUTURE OF SOUND",
+                    text = stringResource(R.string.tagline),
                     style = MaterialTheme.typography.labelMedium.copy(
                         letterSpacing = 2.sp,
                         fontWeight = androidx.compose.ui.text.font.FontWeight.Medium
@@ -229,7 +248,7 @@ fun SplashScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "INITIALIZING ENGINE",
+                        text = stringResource(R.string.initializing_engine),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                             letterSpacing = 1.sp
@@ -260,7 +279,7 @@ fun SplashScreen(
             // Footer
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "PRECISION AUDIO ARCHITECTURE",
+                    text = stringResource(R.string.precision_audio),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontSize = 10.sp,
                         letterSpacing = 2.sp

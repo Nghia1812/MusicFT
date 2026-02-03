@@ -130,7 +130,17 @@ class CollectionSongListViewModel @Inject constructor(
     fun onPlayAll() {
         val state = _uiState.value
         if (state is UiState.Success) {
+            serviceConnection.setShuffleMode(false)
             serviceConnection.playQueue(state.data)
+        }
+    }
+
+    fun onShuffle() {
+        val state = _uiState.value
+        if (state is UiState.Success) {
+            val shuffledSongs = state.data.shuffled()
+            serviceConnection.setShuffleMode(true)
+            serviceConnection.playQueue(shuffledSongs)
         }
     }
 

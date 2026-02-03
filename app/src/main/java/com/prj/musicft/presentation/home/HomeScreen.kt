@@ -28,6 +28,8 @@ import com.prj.musicft.domain.model.Song
 import com.prj.musicft.presentation.common.UiState
 import com.prj.musicft.presentation.common.SongListItem
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.prj.musicft.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -131,7 +133,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "No songs found",
+                            text = stringResource(R.string.no_songs_found),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onBackground
                         )
@@ -201,8 +203,8 @@ fun HomeContent(
         // Recently Added Section
         item {
             SectionHeader(
-                title = "Recently Added",
-                actionText = "See all",
+                title = stringResource(R.string.recently_added),
+                actionText = stringResource(R.string.see_all),
                 onActionClick = {
                     coroutineScope.launch {
                         listState.animateScrollToItem(2)
@@ -217,7 +219,7 @@ fun HomeContent(
         }
 
         // All Songs Section
-        item { SectionHeader(title = "All Songs", actionText = null) }
+        item { SectionHeader(title = stringResource(R.string.all_songs), actionText = null) }
 
         items(songs) { song ->
             SongListItem(
@@ -240,7 +242,7 @@ fun HomeTopBar() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "Discovery",
+            text = stringResource(R.string.discovery),
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.onBackground
         )
@@ -264,12 +266,12 @@ fun SearchBar(onClick: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search",
+                contentDescription = stringResource(R.string.search),
                 tint = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Artists, songs, or lyrics",
+                text = stringResource(R.string.search_placeholder),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

@@ -35,6 +35,8 @@ import com.prj.musicft.presentation.common.UiState
 import com.prj.musicft.presentation.home.AddToPlaylistDialog
 import com.prj.musicft.presentation.home.CreatePlaylistDialog
 import com.prj.musicft.presentation.home.SongDetailOptionModal
+import androidx.compose.ui.res.stringResource
+import com.prj.musicft.R
 
 
 
@@ -121,7 +123,7 @@ fun SearchScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Search",
+                text = stringResource(R.string.search),
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
@@ -136,7 +138,7 @@ fun SearchScreen(
             onValueChange = { viewModel.onSearchQueryChanged(it) },
             placeholder = {
                 Text(
-                    text = "Search songs, artists...",
+                    text = stringResource(R.string.search_songs_artists),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -144,7 +146,7 @@ fun SearchScreen(
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Search",
+                    contentDescription = stringResource(R.string.search),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
@@ -153,7 +155,7 @@ fun SearchScreen(
                 IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Clear",
+                        contentDescription = stringResource(R.string.clear),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -182,7 +184,7 @@ fun SearchScreen(
         // 4. Results Section
         if (uiState !is UiState.Idle) {
             Text(
-                text = "TOP RESULTS",
+                text = stringResource(R.string.top_results),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 2.sp
@@ -215,14 +217,14 @@ fun SearchScreen(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Play what you love",
+                            text = stringResource(R.string.play_what_you_love),
                             style = MaterialTheme.typography.headlineSmall,
                             color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Search for songs, artists, and playlists",
+                            text = stringResource(R.string.search_hint),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -272,7 +274,7 @@ fun SearchScreen(
                         Spacer(modifier = Modifier.height(24.dp))
                         
                         Text(
-                            text = "No results found",
+                            text = stringResource(R.string.no_results_found),
                             style = MaterialTheme.typography.headlineSmall,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold
@@ -281,7 +283,7 @@ fun SearchScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         
                         Text(
-                            text = "Try searching for something\nelse or explore new genres.",
+                            text = stringResource(R.string.no_results_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -298,7 +300,7 @@ fun SearchScreen(
                             shape = RoundedCornerShape(50)
                         ) {
                             Text(
-                                text = "CLEAR ALL FILTERS",
+                                text = stringResource(R.string.clear_all_filters),
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.sp
                             )

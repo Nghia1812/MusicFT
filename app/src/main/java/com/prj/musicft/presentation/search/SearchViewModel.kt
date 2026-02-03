@@ -74,7 +74,7 @@ class SearchViewModel @Inject constructor(
         }
     }
     .onStart { emit(UiState.Idle) }
-    .catch { emit(UiState.Error(it.message ?: "Unknown Search Error")) }
+    .catch { emit(UiState.Error("Unknown Search Error")) }
     .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

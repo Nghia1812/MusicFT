@@ -16,20 +16,20 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.prj.musicft.R
 import com.prj.musicft.presentation.navigation.Screen
-
+import androidx.compose.ui.res.stringResource
+import com.prj.musicft.R
 
 sealed class BottomNavItem(
     val route: String,
-    val title: String
+    val titleResId: Int
 ) {
     @Composable
     abstract fun getIcon(selected: Boolean): ImageVector
 
     object Home : BottomNavItem(
         route = Screen.Home.route,
-        title = "Home"
+        titleResId = R.string.home
     ) {
         @Composable
         override fun getIcon(selected: Boolean): ImageVector =
@@ -38,7 +38,7 @@ sealed class BottomNavItem(
 
     object Library : BottomNavItem(
         route = Screen.Library.route,
-        title = "Library"
+        titleResId = R.string.library
     ) {
         @Composable
         override fun getIcon(selected: Boolean): ImageVector =
@@ -47,7 +47,7 @@ sealed class BottomNavItem(
 
     object Search : BottomNavItem(
         route = Screen.Search.route,
-        title = "Search"
+        titleResId = R.string.search
     ) {
         @Composable
         override fun getIcon(selected: Boolean): ImageVector =
@@ -56,7 +56,7 @@ sealed class BottomNavItem(
 
     object Settings : BottomNavItem(
         route = Screen.Settings.route,
-        title = "Settings"
+        titleResId = R.string.settings
     ) {
         @Composable
         override fun getIcon(selected: Boolean): ImageVector =
@@ -91,11 +91,11 @@ fun AppBottomNavigation(navController: NavController, modifier: Modifier = Modif
                 icon = {
                     Icon(
                         imageVector = item.getIcon(selected),
-                        contentDescription = item.title
+                        contentDescription = stringResource(item.titleResId)
                     )
                 },
                 label = {
-                    Text(text = item.title, style = MaterialTheme.typography.labelSmall)
+                    Text(text = stringResource(item.titleResId), style = MaterialTheme.typography.labelSmall)
                 },
                 selected = selected,
                 onClick = {

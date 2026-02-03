@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.res.vectorResource
 import com.prj.musicft.R
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +56,7 @@ fun SettingsScreen(
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
             "v${packageInfo.versionName}"
         } catch (e: Exception) {
-            "Unknown"
+            context.getString(R.string.unknown)
         }
     }
 
@@ -81,7 +82,7 @@ fun SettingsScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Settings",
+                        text = stringResource(R.string.settings),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Bold
@@ -103,12 +104,12 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // General Section
-            SettingsSection(title = "GENERAL") {
+            SettingsSection(title = stringResource(R.string.general)) {
                 SettingsGroup {
                     SettingsItem(
                         icon = ImageVector.vectorResource(R.drawable.ic_theme),
-                        title = "Theme",
-                        subtitle = if (isDark) "Dark Mode" else "Light Mode",
+                        title = stringResource(R.string.theme),
+                        subtitle = if (isDark) stringResource(R.string.dark_mode) else stringResource(R.string.light_mode),
                         trailingContent = {
                             ThemeSwitcher(
                                 isDark = isDark,
@@ -118,7 +119,7 @@ fun SettingsScreen(
                     )
                     SettingsItem(
                         icon = ImageVector.vectorResource(R.drawable.ic_language),
-                        title = "Language",
+                        title = stringResource(R.string.language),
                         subtitle = displayLanguage, // Display current language name
                         showChevron = true,
                         onClick = { showLanguageDialog = true }
@@ -127,18 +128,18 @@ fun SettingsScreen(
             }
 
             // Audio Section
-            SettingsSection(title = "AUDIO") {
+            SettingsSection(title = stringResource(R.string.audio)) {
                 SettingsGroup {
                     SettingsItem(
                         icon = ImageVector.vectorResource(R.drawable.ic_stat),
-                        title = "Equalizer",
-                        subtitle = "Custom preset active",
+                        title = stringResource(R.string.equalizer),
+                        subtitle = stringResource(R.string.custom_preset_active),
                         showChevron = true
                     )
                     SettingsItem(
                         icon = ImageVector.vectorResource(R.drawable.ic_settings),
-                        title = "Crossfade",
-                        subtitle = "5 seconds overlap",
+                        title = stringResource(R.string.crossfade),
+                        subtitle = stringResource(R.string.crossfade_desc),
                         trailingContent = {
                             Switch(
                                 checked = true,
@@ -154,15 +155,15 @@ fun SettingsScreen(
                     )
                     SettingsItem(
                         icon = ImageVector.vectorResource(R.drawable.ic_album),
-                        title = "Audio Quality",
-                        subtitle = "Lossless (High)",
+                        title = stringResource(R.string.audio_quality),
+                        subtitle = stringResource(R.string.lossless_high),
                         trailingContent = {
                             Badge(
                                 containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                                 contentColor = MaterialTheme.colorScheme.primary
                             ) {
                                 Text(
-                                    text = "FLAC",
+                                    text = stringResource(R.string.flac),
                                     style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -174,18 +175,18 @@ fun SettingsScreen(
             }
 
             // About Section
-            SettingsSection(title = "ABOUT") {
+            SettingsSection(title = stringResource(R.string.about)) {
                 SettingsGroup {
                     SettingsItem(
                         icon = ImageVector.vectorResource(R.drawable.ic_privacy),
-                        title = "Privacy Policy",
+                        title = stringResource(R.string.privacy_policy),
                         showChevron = true,
                         onClick = { showPrivacyDialog = true }
                     )
                     SettingsItem(
                         icon = ImageVector.vectorResource(R.drawable.ic_app_launcher), // Using app launcher as version icon
-                        title = "Version",
-                        subtitle = "Built for audiophiles",
+                        title = stringResource(R.string.version),
+                        subtitle = stringResource(R.string.audiophile_desc),
                         trailingContent = {
                             Text(
                                 text = versionName,
@@ -332,7 +333,7 @@ fun ThemeSwitcher(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Dark",
+                text = stringResource(R.string.dark),
                 style = MaterialTheme.typography.labelSmall,
                 color = if (isDark) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -354,7 +355,7 @@ fun ThemeSwitcher(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Light",
+                text = stringResource(R.string.light),
                 style = MaterialTheme.typography.labelSmall,
                 color = if (!isDark) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -370,15 +371,15 @@ fun LanguageSelectionDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = { Text(text = "Select Language") },
+        title = { Text(text = stringResource(R.string.select_language)) },
         text = {
             Column {
                 val languages = listOf(
-                    "System Default" to "",
-                    "English" to "en",
-                    "Vietnamese" to "vi",
-                    "Spanish" to "es",
-                    "French" to "fr"
+                    stringResource(R.string.system_default) to "",
+                    stringResource(R.string.english) to "en",
+                    stringResource(R.string.vietnamese) to "vi",
+                    stringResource(R.string.spanish) to "es",
+                    stringResource(R.string.french) to "fr"
                 )
                 languages.forEach { (name, code) ->
                     val isSelected = if (code.isEmpty()) {
@@ -406,7 +407,7 @@ fun LanguageSelectionDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismissRequest) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )
@@ -419,7 +420,7 @@ fun PrivacyPolicyDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(text = "Privacy Policy")
+            Text(text = stringResource(R.string.privacy_policy))
         },
         text = {
             Column(
@@ -427,18 +428,14 @@ fun PrivacyPolicyDialog(
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = "Your privacy is important to us. This application does not collect or share any personal data.\n\n" +
-                            "1. Local Music Access: We only access your device's storage to play music files locally.\n" +
-                            "2. No Cloud Sync: All data remains on your device.\n" +
-                            "3. Permissions: We only request necessary permissions for audio playback and notification controls.\n\n" +
-                            "If you have any questions, please contact support.",
+                    text = stringResource(R.string.privacy_policy_desc),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
         },
         confirmButton = {
             TextButton(onClick = onDismissRequest) {
-                Text("Close")
+                Text(stringResource(R.string.close))
             }
         }
     )
